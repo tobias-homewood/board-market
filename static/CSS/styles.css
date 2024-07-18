@@ -1,0 +1,569 @@
+/* General body styling */
+body{
+    background-color:rgb(238, 238, 238) !important;
+}
+
+/* Navbar styles */
+.navbar {
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #343a40;
+}
+
+
+#navbar-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; 
+    padding-right: var(--bs-gutter-x, .75rem);
+    padding-left: var(--bs-gutter-x, .75rem);
+    margin-right: auto;
+    margin-left: auto;
+    flex-wrap: wrap
+}
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-content-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navbar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 200px;
+}
+
+.navbar-brand {
+    padding: 0 5px;
+}
+#slogan{
+    font-size: 0.5em;
+    color: white;
+    padding: 0 5px;
+}
+.navbar-toggler {
+    width: 30px; 
+    height: 30px; 
+    font-size: 1.5em;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.navbar-text {
+    font-size: 0.8em;
+    padding: 5px !important;
+    text-align: right;
+}
+.navbar-brand-wrapper {
+    padding: 5px; 
+}
+
+.navbar-toggler-icon {
+    background-image: none !important;
+    width: 50px;
+}
+.navbar-toggler::before {
+    content: '☰';
+    font-size: 1.5em;
+    line-height: 1; 
+    margin-top: -9px; 
+}
+
+/* Styling for the heart icon */
+.text-red {
+    color: red;
+}
+.bi-heart.favourite {
+    color: red;
+}
+.bi-heart, .bi-heart-fill, .bi-trash {
+    font-size: 0.5em; 
+    margin: 3px;
+    position: relative; 
+    top: -2.5px; 
+}
+
+.bi-heart, .bi-trash {
+    color: #343a40;
+}
+
+#homepage-instructions{
+    text-align: center;
+}
+
+/* Styling for the title on the list board page */
+#list-board-title{
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+/* Styling for the form-group on the list board page */
+#list-board-form-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#list-board-form{
+    width: 50%;
+    max-width: 800px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.list-board-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.list-board-label {
+    width: 200px;
+    text-align: left;
+    font-size: 0.6em; 
+}
+
+.list-board-input,
+.list-board-container select {
+    height: 20px; 
+    font-size: 0.7em; 
+    flex: 2
+}
+
+.list-board-input::placeholder,
+.list-board-container select::placeholder {
+    font-size: 0.7em; 
+}
+
+#board-location-text {
+    background: rgb(189, 189, 189);
+}
+/* Styling for the main container */
+#main-search-container {
+    display: flex;
+}
+
+/* Styling for the board container */
+#board-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Styling for each board */
+.board {
+    flex: 0 0 250px; 
+    max-width: 180px; 
+    max-height: 300px; 
+    height: 300px; 
+    box-sizing: border-box;
+    transition: transform 0.3s ease-in-out; 
+    display: flex; 
+    flex-direction: column; 
+    border: 1px solid black; 
+    margin: 5px;
+    border-radius: 10px;
+    background-color: white;
+    overflow: hidden;
+}
+.board:hover {
+    transform: scale(1.05); 
+}
+
+/* Styling for the board data */
+.board-data {
+    font-size: 0.5em; 
+    margin: 3px;
+}
+
+/* Styling for the board header */
+.board-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    order: 1;
+    font-size: .6em;
+    height: 55px;
+    position: relative;
+    font-style: bold;
+    background-color: #343a40;
+    color: white;
+
+}
+
+/* Styling for the board main info */
+.board-title-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 33px;
+}
+
+.board-title-container{
+    width: 80%;
+}
+
+.price-details{
+    width: 20%;
+}
+
+.board-manufacturer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    height: 15px;
+}
+.board-model {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    height: 15px;
+}
+
+.for-sale-rent{
+    width: 100%;
+    padding: 0 5px;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: 800;
+    align-self: flex-start;
+}
+
+.for-sale-rent.sale {
+    background-color: rgb(71, 126, 71);
+}
+
+.for-sale-rent.rent {
+    background-color: rgb(185, 129, 26);
+}
+
+/* Styling for the board size data */
+.board-measurements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 25px;
+    padding: 0 7px;
+}
+
+.board-image-container {
+    max-width: 100%;
+    max-height: 250px;
+    height: 250px;
+    position: relative;
+    display: flex;           
+    justify-content: center; 
+    align-items: center;     
+    object-fit: contain;
+    order: 2;
+}
+
+.board-image-container {
+    cursor: pointer;
+}
+
+.favourite-form {
+    position: absolute;
+    top: 6px; 
+    background-color: beige;
+    border: 1px solid #343a40; 
+    border-radius: 50%;
+    padding: 3px;
+    width: 16px; 
+    height: 16px; 
+    line-height: 16px; 
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    right: 5px;
+}
+
+#delete-board-temp {
+    position: absolute;
+    top: 1px;
+    background-color: beige;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    line-height: 8px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    right: 1px;
+}
+
+.trash-temp{
+    font-size: 0.2em;
+    margin: 0;
+    position: relative; 
+    top: -6px; 
+}
+
+.board-search.board-image {
+    width: 100%;
+    max-height: 248px;
+    object-fit: contain;
+    transition: visibility 0.3s, opacity 0.3s linear; 
+}
+
+/* Styling for the board data container */
+.board-data-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s linear;
+    background: rgba(255,255,255,0.8); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Hover effect for the board image container */
+.board-image-container:hover .board-search.board-image {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* Hover effect for the board data container */
+.board-image-container:hover .board-data-container {
+    visibility: visible;
+    opacity: 1;
+}
+
+.board-profile-details {
+    display: flex;
+    flex-direction: row;
+    font-size: .8em;
+    height: 100%;
+    object-fit: contain;
+}
+
+@media (min-width: 768px) {
+    .board-profile-details {
+        flex-direction: row;
+    }
+}
+
+.images-container {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 60%;
+    justify-content: center !important;
+}
+
+.extra-images-container {
+    max-width: 15%;
+    max-height: 500px;
+    width: 100px;
+    margin: 10px;
+}
+
+
+.extra-images {
+    flex-direction: column;
+    max-height: 500px;
+    overflow-y: auto; /* this will enable vertical scrolling */
+}
+
+.extra-image {
+    width: 100%;
+    margin: 5px;
+    object-fit: contain;
+    height: auto;
+}
+
+
+#carouselExampleIndicators{
+    width: 500px;
+    object-fit: contain;
+    margin: 10px;
+}
+
+.carousel-item {
+    max-height: 500px; 
+    max-width: 100%;
+    position: relative;
+    display: flex;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 5px;
+}
+
+.carousel-item img {
+    max-height: 500px;
+    max-width: 100%;
+    width: 400px;
+    object-fit: contain;
+}
+
+
+
+.carousel-control-prev, .carousel-control-next {
+    width: 5% !important;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+}
+
+.carousel-control-prev {
+    left: 0px !important;
+}
+
+.carousel-control-next {
+    right: 0px !important;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1) grayscale(1);
+}
+
+.board-profile-data p {
+    margin: .5em;
+}
+
+.board-profile-title {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+
+
+
+
+
+#map {
+    width: 100%;
+    height: 300px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+#mapWrapper {
+    height: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s, opacity 0.5s;
+    overflow: hidden;
+}
+
+#mapContainer {
+    width: 100%;
+    height: 300px;
+    z-index: 10;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.content{
+    clear: both;
+    padding: 10px;
+}
+
+.option-row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.option-col {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.option-btn {
+    width: 50mm;
+    margin: 0 auto;
+    display: block;
+    font-size: 15px !important;
+}
+
+#filters-show-hide-button{
+    font-size: 0.6em;
+}
+
+#filter-form {
+    width: 160px;
+    min-width: 160px;
+}
+
+#filter-form input,
+#filter-form select {
+    width: 90%;
+    font-size: 0.6em;
+    display: block;
+}
+
+#filter-form label {
+    font-size: 0.6em;
+    display: block;
+}
+
+#price-slider,
+#length-slider,
+#width-slider,
+#depth-slider,
+#volume-slider {
+    width: 90%;
+    font-size: 0.6em;
+}
+
+#filter-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#filter-button-container button {
+    width: 50%;
+    margin-right: 5%;
+    margin: 2px;
+    font-size: 0.6em;
+    padding: 3px;
+    background-color: #343a40;
+}
+
+.slider-title {
+    margin-bottom: 0rem;
+    font-size: 0.6em;
+}
+
+#board-location-coordinates-form,
+#board-location-coordinates-label, #board-location-coordinates-input {
+    display: none !important;
+}
