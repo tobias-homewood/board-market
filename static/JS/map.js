@@ -97,11 +97,19 @@ geocoder.on("result", function (e) {
         dataType: 'json',
         success: function(data) {
             console.log('Success:', data);
+            // Call updateResults to refresh the results based on the new location
+            updateResults();
         },
         error: function(error) {
             console.error('Error:', error);
         },
     });
+});
+
+// Add an event listener for the 'moveend' event on the map
+map.on('moveend', function() {
+    // Call updateResults to refresh the results based on the new map center
+    updateResults();
 });
 
 window.onload = function () {

@@ -104,6 +104,8 @@ class Board(db.Model):
     depth_fraction = db.Column(db.String(10))
     depth_total = db.Column(db.Float)
     volume_litres = db.Column(db.DECIMAL(6, 2))
+    fin_setup = db.Column(db.String(255))  
+    board_material = db.Column(db.String(255)) 
     extra_details = db.Column(db.String(255))
     main_photo = db.Column(db.Text)  # Main photo URL
     extra_photos = db.Column(JSON)  # Extra photos URLs, stored as a list
@@ -155,6 +157,8 @@ class SearchPreference(db.Model):
     volume_litres = db.Column(db.DECIMAL(6, 2))
     min_volume = db.Column(db.Integer)
     max_volume = db.Column(db.Integer)
+    fin_setup = db.Column(db.String(255)) 
+    board_material = db.Column(db.String(255))  
     main_photo = db.Column(db.Text)  # Main photo URL
     extra_photos = db.Column(JSON)  # Extra photos URLs, stored as a list
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())  # Default to current timestamp

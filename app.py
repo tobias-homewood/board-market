@@ -93,7 +93,6 @@ def create_app():
     def inject_mapbox_api_key():
         return dict(MAPBOX_API_KEY=MAPBOX_API_KEY)
     
-    # This function applies filters to a query based on the form data
     def apply_filters(query, form):
         # Print the form data for debugging purposes
         print(f"Form data in apply_filters: {form.data}")
@@ -124,6 +123,14 @@ def create_app():
         # If sell_or_rent is provided, filter the query by sell_or_rent
         if form.sell_or_rent.data:
             query = query.filter(Board.sell_or_rent.ilike(f"%{form.sell_or_rent.data}%"))
+
+        # If fin_setup is provided, filter the query by fin_setup
+        if form.fin_setup.data:
+            query = query.filter(Board.fin_setup.ilike(f"%{form.fin_setup.data}%"))
+
+        # If board_material is provided, filter the query by board_material
+        if form.board_material.data:
+            query = query.filter(Board.board_material.ilike(f"%{form.board_material.data}%"))
 
         # If board_location_coordinates is provided, filter the query by board_location_coordinates
         if form.board_location_coordinates.data:
@@ -161,12 +168,11 @@ def create_app():
         if form.model.data:
             query = query.filter(Board.model.ilike(f"%{form.model.data}%"))
 
-        # If width_integer or width_fraction is provided, filter the query by width
-        if form.width_integer.data is not None or form.width_fraction.data is not None:
-            total_width = form.width_integer.data if form.width_integer.data else 0
-            total_width += fraction_to_decimal(form.width_fraction.data) if form.width_fraction.data else 0
-            if total_width > 0:
-                query = query.filter(Board.width_total <= total_width)
+        # If min_width or max_width is provided, filter the query by width
+        if form.min_width.data is not None or form.max_width.data is not None:
+            min_width = form.min_width.data if form.min_width.data else 0
+            max_width = form.max_width.data if form.max_width.data else float('inf')  # Use a very large number if max_width is not provided
+            query = query.filter(Board.width_total.between(min_width, max_width))
 
         # If both min_depth and max_depth are provided, filter the query by depth
         if form.min_depth.data is not None and form.max_depth.data is not None:
@@ -433,9 +439,12 @@ def create_app():
         return render_template('list_board.html', form=form)
 
     from flask import session
-
-    @app.route('/search_boards', methods=['GET'])
-    def search_boards():
+    @app.route('/search_boards', methods=['GET']) 
+    def search_boards(): 
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' 
+        print(f"Is AJAX request: {is_ajax}") # Check if the request is identified as AJAX
+    # Debugging: Print request headers to verify AJAX header presence
+        print("Request headers:", request.headers)
         # Preprocess request arguments
         args = {k: v for k, v in request.args.items() if v != 'None'}
 
@@ -443,7 +452,7 @@ def create_app():
         formdata = MultiDict(args)
 
         # Create form with preprocessed arguments
-        form = SearchForm(formdata)
+        form = SearchForm(formdata=formdata)
 
         # Convert 'None' string to None
         for field in form:
@@ -451,50 +460,53 @@ def create_app():
                 field.data = None
 
         query = Board.query  # start with a base query
-        
-        # If there's no args in the request or the form is not valid
-        if not request.args or not form.validate():
-            # Populate the form with session data
-            form.min_length.data = session.get('min_length')
-            form.max_length.data = session.get('max_length')
-            form.min_price.data = session.get('min_price')
-            form.max_price.data = session.get('max_price')
-            form.min_width.data = session.get('min_width')
-            form.max_width.data = session.get('max_width')
-            form.min_depth.data = session.get('min_depth')
-            form.max_depth.data = session.get('max_depth')
-            form.min_volume.data = session.get('min_volume')
-            form.max_volume.data = session.get('max_volume')
-            form.sell_or_rent.data = session.get('sell_or_rent')
-            form.board_location_text.data = session.get('board_location_text')
-            form.board_location_coordinates.data = session.get('board_location_coordinates')
-            form.board_manufacturer.data = session.get('board_manufacturer')
-            form.model.data = session.get('model')
-            form.condition.data = session.get('condition')
-            form.delivery_options.data = session.get('delivery_options')
 
-        if request.args and form.validate():
-            query = apply_filters(query, form)
-            session['min_length'] = form.min_length.data
-            session['max_length'] = form.max_length.data
-            session['min_price'] = form.min_price.data
-            session['max_price'] = form.max_price.data
-            session['min_width'] = form.min_width.data
-            session['max_width'] = form.max_width.data
-            session['min_depth'] = form.min_depth.data
-            session['max_depth'] = form.max_depth.data
-            session['min_volume'] = form.min_volume.data
-            session['max_volume'] = form.max_volume.data
-            session['sell_or_rent'] = form.sell_or_rent.data
-            session['board_location_text'] = form.board_location_text.data
-            session['board_location_coordinates'] = form.board_location_coordinates.data
-            session['board_manufacturer'] = form.board_manufacturer.data
-            session['model'] = form.model.data
-            session['condition'] = form.condition.data
-            session['delivery_options'] = form.delivery_options.data
-            
+        # if not request.args or not form.validate():
+        #     # Populate the form with session data
+        #     form.min_length.data = session.get('min_length')
+        #     form.max_length.data = session.get('max_length')
+        #     form.min_price.data = session.get('min_price')
+        #     form.max_price.data = session.get('max_price')
+        #     form.min_width.data = session.get('min_width')
+        #     form.max_width.data = session.get('max_width')
+        #     form.min_depth.data = session.get('min_depth')
+        #     form.max_depth.data = session.get('max_depth')
+        #     form.min_volume.data = session.get('min_volume')
+        #     form.max_volume.data = session.get('max_volume')
+        #     form.sell_or_rent.data = session.get('sell_or_rent')
+        #     form.board_location_text.data = session.get('board_location_text')
+        #     form.board_location_coordinates.data = session.get('board_location_coordinates')
+        #     form.board_manufacturer.data = session.get('board_manufacturer')
+        #     form.model.data = session.get('model')
+        #     form.condition.data = session.get('condition')
+        #     form.delivery_options.data = session.get('delivery_options')
+        #     form.fin_setup.data = session.get('fin_setup')
+        #     form.board_material.data = session.get('board_material')
+        # else:
+        query = apply_filters(query, form)
+        #     # Update session with form data
+        #     session['min_length'] = form.min_length.data
+        #     session['max_length'] = form.max_length.data
+        #     session['min_price'] = form.min_price.data
+        #     session['max_price'] = form.max_price.data
+        #     session['min_width'] = form.min_width.data
+        #     session['max_width'] = form.max_width.data
+        #     session['min_depth'] = form.min_depth.data
+        #     session['max_depth'] = form.max_depth.data
+        #     session['min_volume'] = form.min_volume.data
+        #     session['max_volume'] = form.max_volume.data
+        #     session['sell_or_rent'] = form.sell_or_rent.data
+        #     session['board_location_text'] = form.board_location_text.data
+        #     session['board_location_coordinates'] = form.board_location_coordinates.data
+        #     session['board_manufacturer'] = form.board_manufacturer.data
+        #     session['model'] = form.model.data
+        #     session['condition'] = form.condition.data
+        #     session['delivery_options'] = form.delivery_options.data
+        #     session['fin_setup'] = form.fin_setup.data
+        #     session['board_material'] = form.board_material.data
 
         boards = query.all()  # execute the query
+        
         # Check if the user is authenticated before querying the user's favourites
         if current_user.is_authenticated:
             favourites = Favourites.query.filter_by(user_id=current_user.id).all()
@@ -505,7 +517,46 @@ def create_app():
             flash('Invalid form data...', 'error')
             print(form.errors)
 
-        return render_template('search_boards.html', form=form, boards=boards, favourites=favourites, convert_inches_to_feet=convert_inches_to_feet, convert_decimal_to_fraction=convert_decimal_to_fraction) # pass boards and favourites to the template
+        # For AJAX requests, return JSON
+        if is_ajax:
+            boards_data = [
+                {
+                    'board_id': board.board_id,
+                    'user_id': board.user_id,
+                    'username': board.user.username,
+                    'asking_price': str(board.asking_price),  # Convert DECIMAL to string for JSON serialization
+                    'board_manufacturer': board.board_manufacturer,
+                    'board_length_feet': board.board_length_feet,
+                    'board_length_inches': board.board_length_inches,
+                    'board_length_total': board.board_length_total,
+                    'condition': board.condition,
+                    'sell_or_rent': board.sell_or_rent,
+                    'board_location_text': board.board_location_text,
+                    'board_location_coordinates': board.board_location_coordinates,
+                    # 'board_location_spatial': board.board_location_spatial,  # Spatial data might need special handling
+                    'delivery_options': board.delivery_options,
+                    'model': board.model,
+                    'width_integer': board.width_integer,
+                    'width_fraction': convert_decimal_to_fraction(board.width_total - board.width_integer),
+                    'width_total': board.width_total,
+                    'depth_integer': board.depth_integer,
+                    'depth_fraction': convert_decimal_to_fraction(board.depth_total - board.depth_integer),
+                    'depth_total': board.depth_total,
+                    'volume_litres': str(board.volume_litres),  # Convert DECIMAL to string for JSON serialization
+                    'fin_setup': board.fin_setup,
+                    'board_material': board.board_material,
+                    'extra_details': board.extra_details,
+                    'main_photo': board.main_photo,
+                    'extra_photos': board.extra_photos,
+                    'created_at': board.created_at.isoformat(),  # Convert TIMESTAMP to ISO format string
+                    'updated_at': board.updated_at.isoformat()  # Convert TIMESTAMP to ISO format string
+                } for board in boards
+            ]
+            print("AJAX response data:", jsonify({'boards': boards_data}).get_data(as_text=True))
+            return jsonify({'boards': boards_data})
+
+        # For non-AJAX requests, render the template as before
+        return render_template('search_boards.html', form=form, boards=boards, favourites=favourites, convert_inches_to_feet=convert_inches_to_feet, convert_decimal_to_fraction=convert_decimal_to_fraction)
 
     @app.route('/board_profile/<int:board_id>', methods=['GET'])
     def board_profile(board_id):

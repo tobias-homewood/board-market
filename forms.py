@@ -39,6 +39,23 @@ class BoardForm(FlaskForm):
     depth_integer = SelectField('Depth Integer', choices=[(str(i), str(i)) for i in [2, 3, 4]], validators=[InputRequired()])
     depth_fraction = SelectField('Depth Fraction', choices=[(f'{i}/16', f'{i}/16') for i in range(0, 16)], validators=[InputRequired()])    
     volume_litres = DecimalField('Volume (Litres)', places=2, rounding=None, validators=[InputRequired()])
+    fin_setup = SelectField('Fin Setup', choices=[
+        ('Single fin', 'Single fin'), 
+        ('Twin fin', 'Twin fin'), 
+        ('Thruster', 'Thruster'), 
+        ('2 + 1', '2 + 1'), 
+        ('Quad', 'Quad'), 
+        ('5 fin', '5 fin'), 
+        ('Other', 'Other')
+    ], validators=[InputRequired()])
+    board_material = SelectField('Board Material', choices=[
+        ('Polyurethane (PU)', 'Polyurethane (PU)'), 
+        ('Epoxy (EPS)', 'Epoxy (EPS)'), 
+        ('Foam', 'Foam'), 
+        ('Wooden', 'Wooden'), 
+        ('Carbon', 'Carbon'), 
+        ('Other', 'Other')
+    ], validators=[InputRequired()])
     extra_details = TextAreaField('Extra Details', validators=[Length(max=255)])
     main_photo = FileField('Main Photo', validators=[FileAllowed(['jpg', 'png','jpeg']), InputRequired()])
     extra_photos = MultipleFileField('Extra Photos', validators=[FileAllowed(['jpg', 'png','jpeg']), Optional(), validate_photo_count])
@@ -69,6 +86,25 @@ class SearchForm(FlaskForm):
     min_depth = DecimalField('Minimum Depth', places=5, rounding=None, validators=[Optional()])
     max_depth = DecimalField('Maximum Depth', places=5, rounding=None, validators=[Optional()])
     volume_litres = DecimalField('Volume (Litres)', places=2, rounding=None, validators=[Optional()])
+    fin_setup = SelectField('Fin Setup', choices=[
+        ('', 'Any'), 
+        ('Single fin', 'Single fin'), 
+        ('Twin fin', 'Twin fin'), 
+        ('Thruster', 'Thruster'), 
+        ('2 + 1', '2 + 1'), 
+        ('Quad', 'Quad'), 
+        ('5 fin', '5 fin'), 
+        ('Other', 'Other')
+    ], validators=[Optional()])
+    board_material = SelectField('Board Material', choices=[
+        ('', 'Any'), 
+        ('Polyurethane (PU)', 'Polyurethane (PU)'), 
+        ('Epoxy (EPS)', 'Epoxy (EPS)'), 
+        ('Foam', 'Foam'), 
+        ('Wooden', 'Wooden'), 
+        ('Carbon', 'Carbon'), 
+        ('Other', 'Other')
+    ], validators=[Optional()])
     min_volume = DecimalField('Minimum Volume (Litres)', places=2, rounding=None, validators=[Optional()])
     max_volume = DecimalField('Maximum Volume (Litres)', places=2, rounding=None, validators=[Optional()])
     
