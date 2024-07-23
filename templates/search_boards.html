@@ -92,7 +92,6 @@
                         <p class="board-data">Depth: {{ board.depth_integer }} {{ convert_decimal_to_fraction(board.depth_fraction) }}</p>
                         <p class="board-data">Condition: {{ board.condition }}</p>
                         <p class="board-data">Location: {{ board.board_location_text }}</p>
-                        <p class="board-data">Coordinates: {{ board.board_location_coordinates }}</p>
                         <p class="board-data">Delivery Options: {{ board.delivery_options }}</p>
                         <p class="board-data">Extra Details: {{ board.extra_details }}</p>
                         <p class="board-data">Added by: <a href="{{ url_for('user_profile', username=board.user.username) }}">{{ board.user.username }}</a></p>
