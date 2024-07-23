@@ -97,8 +97,10 @@ geocoder.on("result", function (e) {
         dataType: 'json',
         success: function(data) {
             console.log('Success:', data);
-            // Call updateResults to refresh the results based on the new location
-            updateResults();
+            // Check if the current page is the /search_boards route before calling updateResults
+            if (window.location.pathname === '/search_boards') {
+                updateResults(); // Call updateResults only if on the /search_boards page
+            }
         },
         error: function(error) {
             console.error('Error:', error);
@@ -109,7 +111,9 @@ geocoder.on("result", function (e) {
 // Add an event listener for the 'moveend' event on the map
 map.on('moveend', function() {
     // Call updateResults to refresh the results based on the new map center
-    updateResults();
+    if (window.location.pathname === '/search_boards') {
+        updateResults(); // Call updateResults only if on the /search_boards page
+    }
 });
 
 window.onload = function () {
