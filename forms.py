@@ -2,12 +2,19 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, IntegerField, SelectField, TextAreaField, PasswordField, MultipleFileField, ValidationError
 from wtforms.validators import InputRequired, Email, Length, Optional, NumberRange
 from flask_wtf.file import FileField, FileAllowed
+import math
 
 # Custom validator
 def validate_photo_count(form, field):
     if len(field.data) > 7:
         raise ValidationError('No more than 7 photos are allowed.')
     
+def simplify_fraction(numerator, denominator):
+    gcd = math.gcd(numerator, denominator)
+    simplified_numerator = numerator // gcd
+    simplified_denominator = denominator // gcd
+    return simplified_numerator, simplified_denominator
+
 # Form for adding a new user
 class UserAddForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
@@ -26,7 +33,7 @@ class BoardForm(FlaskForm):
     user_id = StringField('User ID')
     asking_price = DecimalField('Asking Price (€)', validators=[InputRequired()])
     board_manufacturer = StringField('Board Manufacturer', validators=[InputRequired()])
-    board_length_feet = SelectField('Board Length (Feet)', choices=[(str(i), str(i)) for i in range(16)], validators=[InputRequired()])
+    board_length_feet = SelectField('Board Length (Feet)', choices=[(str(i), str(i)) for i in range(15)], validators=[InputRequired()])
     board_length_inches = SelectField('Board Length (Inches)', choices=[(str(i), str(i)) for i in range(12)], validators=[InputRequired()])     
     condition = SelectField('Condition', choices=[('New', 'New'), ('Used - Excellent', 'Used - Excellent'), ('Used - Great', 'Used - Great'), ('Used - Good', 'Used - Good'), ('Used - Poor', 'Used - Poor')], validators=[InputRequired()])    
     sell_or_rent = SelectField('Sell or Rent', choices=[('For sale', 'For sale'), ('For rent', 'For rent')], validators=[InputRequired()])    
@@ -34,10 +41,10 @@ class BoardForm(FlaskForm):
     board_location_coordinates = StringField('Board Location Coordinates', validators=[InputRequired()])
     delivery_options = SelectField('Collection / Delivery', choices=[('Pick up only', 'Pick up only'), ('Local delivery', 'Local delivery'), ('National delivery', 'National delivery'), ('International delivery', 'International delivery')], validators=[InputRequired()])    
     model = StringField('Model')
-    width_integer = SelectField('Width Integer', choices=[(str(i), str(i)) for i in range(15, 26)], validators=[InputRequired()])
-    width_fraction = SelectField('Width Fraction', choices=[(f'{i}/16', f'{i}/16') for i in range(0, 16)], validators=[InputRequired()])    
-    depth_integer = SelectField('Depth Integer', choices=[(str(i), str(i)) for i in [2, 3, 4]], validators=[InputRequired()])
-    depth_fraction = SelectField('Depth Fraction', choices=[(f'{i}/16', f'{i}/16') for i in range(0, 16)], validators=[InputRequired()])    
+    width_integer = SelectField('Width Integer', choices=[(str(i), str(i)) for i in range(0, 30)], validators=[InputRequired()])
+    width_fraction = SelectField('Width Fraction', choices = [(f'{i}/16', '0' if i == 0 else f'{simplify_fraction(i, 16)[0]}/{simplify_fraction(i, 16)[1]}') for i in range(16)], validators=[InputRequired()])    
+    depth_integer = SelectField('Depth Integer', choices=[(str(i), str(i)) for i in [0,1,2, 3, 4]], validators=[InputRequired()])
+    depth_fraction = SelectField('Depth Fraction', choices = [(f'{i}/16', '0' if i == 0 else f'{simplify_fraction(i, 16)[0]}/{simplify_fraction(i, 16)[1]}') for i in range(16)], validators=[InputRequired()])    
     volume_litres = DecimalField('Volume (Litres)', places=2, rounding=None, validators=[InputRequired()])
     fin_setup = SelectField('Fin Setup', choices=[
         ('Single fin', 'Single fin'), 
