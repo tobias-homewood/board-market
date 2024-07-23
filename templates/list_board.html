@@ -52,6 +52,14 @@
                 <div class="list-board-input">{{ form.depth_integer() }} {{ form.depth_fraction() }} Inches</div>
             </div>
             <div class="list-board-container">
+                <label class="list-board-label">{{ form.fin_setup.label }}</label>
+                <div class="list-board-input">{{ form.fin_setup() }}</div>
+            </div>
+            <div class="list-board-container">
+                <label class="list-board-label">{{ form.board_material.label }}</label>
+                <div class="list-board-input">{{ form.board_material() }}</div>
+            </div>
+            <div class="list-board-container">
                 <label class="list-board-label">{{ form.main_photo.label }}</label>
                 <div class="list-board-input">{{ form.main_photo() }}</div>
             </div>
