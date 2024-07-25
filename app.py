@@ -562,6 +562,20 @@ def create_app():
 
     @app.route('/board_profile/<int:board_id>', methods=['GET'])
     def board_profile(board_id):
+        # Preprocess request arguments
+        args = {k: v for k, v in request.args.items() if v != 'None'}
+
+        # Create a MultiDict with preprocessed arguments
+        formdata = MultiDict(args)
+
+        # Create form with preprocessed arguments
+        form = SearchForm(formdata=formdata)
+
+        # Convert 'None' string to None
+        for field in form:
+            if field.data == 'None':
+                field.data = None
+
         board = Board.query.get(board_id)
         if board is None:
             flash('Board not found.', 'error')
@@ -572,18 +586,32 @@ def create_app():
             for photo in board.extra_photos:
                 print(photo)
 
-        return render_template('board_profile.html', board=board, convert_decimal_to_fraction=convert_decimal_to_fraction)
+        return render_template('board_profile.html', board=board, convert_decimal_to_fraction=convert_decimal_to_fraction, form=form)
     
     @app.route('/delete_board/<int:board_id>', methods=['POST'])
     def delete_board(board_id):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' 
+        print(f"Is AJAX request: {is_ajax}")
+
         board = Board.query.get(board_id)
+
         if board:
             db.session.delete(board)
             db.session.commit()
-            response = {'status': 'success', 'message': 'Board deleted successfully.'}
+            status = 'success'
+            message = 'Board deleted successfully.'
         else:
-            response = {'status': 'error', 'message': 'Board not found.'}
-        return jsonify(response)
+            status = 'error'
+            message = 'Board not found.'
+
+        if is_ajax:
+            response = jsonify({'status': status, 'message': message})
+            print("AJAX response data:", response.get_data(as_text=True))
+            return response
+
+        flash(message)
+        # return render_template('index.html', user_logged_in=current_user.is_authenticated)
+        return redirect(url_for('index'))
 
 
     @app.route('/toggle_favourite/<int:board_id>', methods=['POST'])

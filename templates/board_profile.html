@@ -41,7 +41,15 @@
         </div>
     </div>
     <div class="board-profile-data">
-        <h2 class="board-profile-title">{{ board.board_manufacturer }} - {{ board.model }}</h2>
+        <h2 class="board-profile-title">{{ board.board_manufacturer }} - {{ board.model }} <button form="delete-board-temp" type="submit" class="btn btn-link p-0 m-0 align-baseline">
+            <i class="bi bi-trash trash-temp"></i> <!-- Bin icon -->
+        </button></h2>
+        {% if current_user.id == board.user_id %}
+            <!-- Delete form -->
+            <form id="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
+                {{ form.hidden_tag() }} <!-- CSRF token for form -->
+            </form>
+        {% endif %}
         <p>{{ board.sell_or_rent }} - €{{ board.asking_price }}</p>
         <p>Length: {{ board.board_length_feet }}' {{ board.board_length_inches }}"</p>
         <p>Volume: {{ board.volume_litres }} L</p>
