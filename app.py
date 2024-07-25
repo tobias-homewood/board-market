@@ -737,8 +737,8 @@ def create_app():
             form.width_fraction.data = convert_decimal_to_sixteenth(board.width_fraction)
             form.depth_fraction.data = convert_decimal_to_sixteenth(board.depth_fraction)
 
-            # add the photos to the form
-            # location can change?
+            # filter extra photos that don't specify a file
+            form.extra_photos.data = [photo for photo in board.extra_photos if not photo.endswith('/')]
 
             return render_template('edit_board.html', form=form, board=board)
 
