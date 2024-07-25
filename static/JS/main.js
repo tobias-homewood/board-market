@@ -52,7 +52,6 @@ $(document).ready(function() {
                     $("[name='" + key + "']").val(value);
                 }
             });
-
             // Repopulate other saved values and trigger updates as needed
         }
 
@@ -86,7 +85,9 @@ function updateResults() {
         success: function(response) {
             console.log("Success:", response);
             boardsContainer.innerHTML = '';
-
+            const current_user_id = response.user_id;
+            const favourites = response.favourites;
+            
             response.boards.forEach(board => {
                 const boardElement = document.createElement('div');
                 boardElement.className = 'board';
@@ -118,7 +119,22 @@ function updateResults() {
                             <p class="board-data">Extra Details: ${board.extra_details}</p>
                             <p class="board-data">Added by: <a href="/user_profile/${board.username}">${board.username}</a></p>
                         </div>
+                   
+                        <form class="favourite-form" method="POST" action="/toggle_favourite/${board.board_id}" data-board-id="${board.board_id}">
+                            <input type="hidden" name="csrf_token" value="${csrfToken}">
+                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                                <i class="heart-search bi ${favourites.indexOf(board.board_id) != -1 ? 'bi-heart-fill text-red' : 'bi-heart'}"></i>
+                            </button>
+                        </form>
+                        ${board.user_id === current_user_id ? `
+                        <form id="delete-board-temp" method="POST" action="/delete_board/${board.board_id}">
+                            <input type="hidden" name="csrf_token" value="${csrfToken}">
+                            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                                <i class="bi bi-trash trash-temp"></i>
+                            </button>
+                        </form>
                     </div>
+                    ` : ''}
                 `;
                 boardsContainer.appendChild(boardElement);
 

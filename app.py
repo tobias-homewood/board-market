@@ -555,10 +555,10 @@ def create_app():
                 } for board in boards
             ]
             print("AJAX response data:", jsonify({'boards': boards_data}).get_data(as_text=True))
-            return jsonify({'boards': boards_data})
+            return jsonify({'boards': boards_data, 'user_id': current_user.id if current_user.is_authenticated else None, 'favourites': [favourite.board_id for favourite in favourites]})
 
         # For non-AJAX requests, render the template as before
-        return render_template('search_boards.html', form=form, boards=boards, favourites=favourites, convert_inches_to_feet=convert_inches_to_feet, convert_decimal_to_fraction=convert_decimal_to_fraction)
+        return render_template('search_boards.html', form=form, boards=boards, convert_inches_to_feet=convert_inches_to_feet, convert_decimal_to_fraction=convert_decimal_to_fraction)
 
     @app.route('/board_profile/<int:board_id>', methods=['GET'])
     def board_profile(board_id):
