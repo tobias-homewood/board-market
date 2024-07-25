@@ -87,7 +87,7 @@ function updateResults() {
             boardsContainer.innerHTML = '';
             const current_user_id = response.user_id;
             const favourites = response.favourites;
-            
+
             response.boards.forEach(board => {
                 const boardElement = document.createElement('div');
                 boardElement.className = 'board';
@@ -142,6 +142,8 @@ function updateResults() {
                 boardElement.querySelector('.board-image-container').addEventListener('click', function() {
                     window.location.href = this.getAttribute('data-url');
                 });
+
+                addEventListeners();
             });
         },
         error: function(xhr, status, error) {
@@ -385,7 +387,7 @@ document.querySelectorAll('.board-image-container').forEach(function(element) {
     });
 });
 
-$(document).ready(function() {
+function addEventListeners() {
     // Prevent double submission
     $('#list-board-form').on('submit', function() {
         $('#submit-button').prop('disabled', true);
@@ -467,17 +469,7 @@ $(document).ready(function() {
             }
         });
     });
-});
 
-// $(document).ready(function() {
-//     $(".favourite-form button, #delete-board-temp button").on("click", function(e) {
-//         e.stopPropagation();
-//     });
-// });
-
-
-// This function changes the main image to the one clicked in the 'extra-image' class.
-$(document).ready(function(){
     $(".extra-image").click(function(){
         var newSrc = $(this).attr("src");
         var index = $(this).index();
@@ -492,7 +484,11 @@ $(document).ready(function(){
         // Add the 'active' class to the carousel item at the same index as the clicked extra image
         $(".carousel-item").eq(index).addClass("active");
     });
-});
+}
+
+
+// This function changes the main image to the one clicked in the 'extra-image' class.
+$(document).ready(addEventListeners);
 
 // This function is used on the list board form to direct users to where they can change the location
 var boardLocationText = document.getElementById('board-location-text');
