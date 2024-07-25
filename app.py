@@ -647,6 +647,83 @@ def create_app():
             print('Request data:', request.data)
             return jsonify({'message': 'Error updating location', 'error': str(e)}), 400
 
+    @app.route('/edit_board/<int:board_id>', methods=['GET', 'POST'])
+    @login_required
+    def edit_board(board_id):
+        board = Board.query.get_or_404(board_id)
+
+        form = BoardForm()
+        form.board_location_text.data = session.get('location_text', 'Default Location')
+        form.board_location_coordinates.data = session.get('coordinates', 'Default Coordinates')
+
+        if form.validate_on_submit():
+            width_fraction_decimal = fraction_to_decimal(form.width_fraction.data)
+            depth_fraction_decimal = fraction_to_decimal(form.depth_fraction.data)
+            board_length_total = int(form.board_length_feet.data) * 12 + int(form.board_length_inches.data)
+            # Calculate total width and depth
+            width_total = float(form.width_integer.data) + (width_fraction_decimal if width_fraction_decimal else 0)
+            depth_total = float(form.depth_integer.data) + (depth_fraction_decimal if depth_fraction_decimal else 0)
+            
+            # Get the main photo from the form
+            main_photo_file = request.files['main_photo']
+            main_photo_filename = secure_filename(main_photo_file.filename)
+            # Upload the main photo to Google Cloud Storage
+            upload_blob(main_photo_file, main_photo_filename)
+            # Get the URL of the uploaded main photo
+            main_photo_url = f"https://storage.googleapis.com/board-market/{main_photo_filename}"
+            
+            # Get the extra photos from the form
+            extra_photo_files = request.files.getlist('extra_photos')
+            extra_photo_urls = []
+            for extra_photo_file in extra_photo_files:
+                extra_photo_filename = secure_filename(extra_photo_file.filename)
+                # Upload the extra photo to Google Cloud Storage
+                upload_blob(extra_photo_file, extra_photo_filename)
+                # Get the URL of the uploaded extra photo
+                extra_photo_url = f"https://storage.googleapis.com/board-market/{extra_photo_filename}"
+                extra_photo_urls.append(extra_photo_url)
+            
+            # Remove square brackets and split the string into lat and lon
+            lon, lat = map(float, form.board_location_coordinates.data)
+
+            # Update the board's attributes with the form data
+            board.user_id = current_user.id
+            board.asking_price = form.asking_price.data
+            board.board_manufacturer = form.board_manufacturer.data
+            board.board_length_feet = form.board_length_feet.data
+            board.board_length_inches = form.board_length_inches.data
+            board.board_length_total = board_length_total
+            board.condition = form.condition.data
+            board.sell_or_rent = form.sell_or_rent.data
+            board.board_location_text = form.board_location_text.data
+            board.board_location_coordinates = form.board_location_coordinates.data
+            board.board_location_spatial = WKTElement(f'POINT({lon} {lat})', srid=4326)
+            board.delivery_options = form.delivery_options.data
+            board.model = form.model.data
+            board.width_integer = form.width_integer.data
+            board.width_fraction = width_fraction_decimal
+            board.width_total = width_total  # Add total width to the board
+            board.depth_integer = form.depth_integer.data
+            board.depth_fraction = depth_fraction_decimal
+            board.depth_total = depth_total  # Add total depth to the board
+            board.volume_litres = form.volume_litres.data
+            board.fin_setup = form.fin_setup.data
+            board.board_material = form.board_material.data
+            board.extra_details = form.extra_details.data
+            board.main_photo = main_photo_url  # Add main_photo URL to the board
+            board.extra_photos = extra_photo_urls  # Add extra_photos URLs to the board
+
+            db.session.commit()  # Commit the changes to the database
+            flash('Board updated successfully!', 'success')
+            return redirect(url_for('index'))
+        else:
+            form = BoardForm(obj=board)
+
+            # add the photos to the form
+
+            return render_template('edit_board.html', form=form, board=board)
+
+
     
     return app
 
