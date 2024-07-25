@@ -50,8 +50,11 @@
         <p>Condition: {{ board.condition }}</p>
         <p>Location: {{ board.board_location_text }}</p>
         <p>Delivery Options: {{ board.delivery_options }}</p>
+        <p>Fin Setup: {{ board.fin_setup }}</p>
+        <p>Board Material: {{ board.board_material }}</p>
         <p>Extra Details: {{ board.extra_details }}</p>
         <p>Added by: <a href="{{ url_for('user_profile', username=board.user.username) }}">{{ board.user.username }}</a></p>
+        
     </div>
 </div>
 {% endblock %}

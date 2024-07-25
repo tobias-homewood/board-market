@@ -425,6 +425,8 @@ def create_app():
                 depth_fraction=depth_fraction_decimal,
                 depth_total=depth_total,  # Add total depth to the board
                 volume_litres=form.volume_litres.data,
+                fin_setup=form.fin_setup.data,  
+                board_material=form.board_material.data,  
                 extra_details=form.extra_details.data,
                 main_photo=main_photo_url,  # Add main_photo URL to the board
                 extra_photos=extra_photo_urls  # Add extra_photos URLs to the board
@@ -578,10 +580,10 @@ def create_app():
         if board:
             db.session.delete(board)
             db.session.commit()
-            flash('Board deleted successfully.')
+            response = {'status': 'success', 'message': 'Board deleted successfully.'}
         else:
-            flash('Board not found.')
-        return redirect(url_for('search_boards'))
+            response = {'status': 'error', 'message': 'Board not found.'}
+        return jsonify(response)
 
 
     @app.route('/toggle_favourite/<int:board_id>', methods=['POST'])

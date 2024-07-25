@@ -42,9 +42,11 @@ CREATE TABLE boards (
     depth_fraction VARCHAR(10),
     depth_total DECIMAL,
     volume_litres INTEGER,
+    fin_setup VARCHAR(255),
+    board_material VARCHAR(255),
     extra_details VARCHAR(255),
-    main_photo TEXT,  -- New field
-    extra_photos JSON,  -- New field
+    main_photo TEXT,  
+    extra_photos JSON,  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -98,8 +100,10 @@ CREATE TABLE search_preferences (
     volume_litres DECIMAL,
     min_volume INTEGER,
     max_volume INTEGER,
-    main_photo TEXT,  -- New field
-    extra_photos JSON,  -- New field
+    fin_setup VARCHAR(255),
+    board_material VARCHAR(255);
+    main_photo TEXT,  
+    extra_photos JSON,  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

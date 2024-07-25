@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="message-container">
+    <div class="message-header">
+        <h2>Message from {{ sender.username }}</h2>
+    </div>
+    <div class="message-content">
+        <p>{{ message_content }}</p>
+    </div>
+    <div class="message-footer">
+        <p>Sent at: {{ sent_at }}</p>
+    </div>
+</div>
+{% endblock %}

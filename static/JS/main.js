@@ -35,56 +35,57 @@ function convertToInchesWithFraction(decimalInches) {
 }
 
 $(document).ready(function() {
-    // Debugging: Log the saved form data
-    console.log("Saved Form Data:", localStorage.getItem('formData'));
-    
-    // Check if there's saved form data in localStorage
-    var savedFormData = localStorage.getItem('formData');
-    console.log("Document Ready - Saved Form Data:", savedFormData);
-    if (savedFormData) {
-        // Parse the saved form data
-        var formDataArray = savedFormData.split('&');
-        formDataArray.forEach(function(item) {
-            var keyValue = item.split('=');
-            var key = decodeURIComponent(keyValue[0]);
-            var value = decodeURIComponent(keyValue[1].replace(/\+/g, ' '));
-            // Set the form field
-            $("[name='" + key + "']").val(value);
-        });
+    if (window.location.pathname === '/search_boards'){
+        console.log("Saved Form Data:", localStorage.getItem('formData'));
 
-        // Optionally, repopulate other saved values like sliders
-        // Example for a slider:
-        // var minLength = localStorage.getItem('minLength');
-        // if(minLength) {
-        //     $("#length-slider").slider("values", 0, minLength);
-        // }
+        var savedFormData = localStorage.getItem('formData');
+        console.log("Document Ready - Saved Form Data:", savedFormData);
+        if (savedFormData) {
+            var formDataArray = savedFormData.split('&');
+            formDataArray.forEach(function(item) {
+                var keyValue = item.split('=');
+                var key = decodeURIComponent(keyValue[0]);
+                var value = decodeURIComponent(keyValue[1].replace(/\+/g, ' '));
 
-        // Trigger the updateResults function to load results based on saved form data
-        updateResults();
+                // Exclude CSRF token from being set
+                if (key !== 'csrf_token') {
+                    $("[name='" + key + "']").val(value);
+                }
+            });
+
+            // Repopulate other saved values and trigger updates as needed
+        }
+
+        // Call updateResults after the form data has been repopulated
+        // updateResults();
     }
 });
 
 function updateResults() {
     console.log("updateResults has been called");
-    var formData = $("form").serialize(); // Serialize the form data
-    
-    // Console log the serialized form data
-    console.log("Serialized Form Data:", formData);
+    const boardsContainer = document.getElementById('board-container');
 
-    // Save serialized form data to localStorage
+    // Retrieve CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    var formData = $("form").serialize();
+    console.log("Serialized Form Data:", formData);
     localStorage.setItem('formData', formData);
     console.log("Saved Form Data:", localStorage.getItem('formData'));
 
-    var actionUrl = $("form").attr("action"); // Get the action URL from the form's 'action' attribute
+    var actionUrl = $("form").attr("action");
 
-    $.ajax({
+    $.ajax({    
         url: actionUrl,
         type: "GET",
         data: formData,
+        beforeSend: function(xhr) {
+            // Include CSRF token as header
+            xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+        },
         success: function(response) {
             console.log("Success:", response);
-            const boardsContainer = document.getElementById('board-container');
-            boardsContainer.innerHTML = ''; // Clear existing boards
+            boardsContainer.innerHTML = '';
 
             response.boards.forEach(board => {
                 const boardElement = document.createElement('div');
@@ -120,6 +121,11 @@ function updateResults() {
                     </div>
                 `;
                 boardsContainer.appendChild(boardElement);
+
+                // Add click event listener to navigate on click
+                boardElement.querySelector('.board-image-container').addEventListener('click', function() {
+                    window.location.href = this.getAttribute('data-url');
+                });
             });
         },
         error: function(xhr, status, error) {
@@ -128,7 +134,8 @@ function updateResults() {
     });
 }
 
-$(function () {
+if (window.location.pathname === '/search_boards') {
+    (function () {
     // Initialize length slider
     var savedMinLength = localStorage.getItem('minLength') ? parseInt(localStorage.getItem('minLength'), 10) : $("#length-slider").data("min-length");
     var savedMaxLength = localStorage.getItem('maxLength') ? parseInt(localStorage.getItem('maxLength'), 10) : $("#length-slider").data("max-length");
@@ -281,7 +288,8 @@ $(function () {
             updateResults();
         });
     });
-});
+})();
+}
 
     // Handle the reset button click event
     $('#reset-button').click(function() {
@@ -326,7 +334,9 @@ $(function () {
         $("#max-price").val('');
 
         // Update results after reset
-        updateResults();
+        setTimeout(function() {
+            updateResults();
+        }, 500)
     });
     
 // This block of code is responsible for handling the click event on the filters element.
@@ -344,21 +354,111 @@ document.addEventListener("DOMContentLoaded", (event) => {
         });
     }
 });
+
 // This function navigates to a URL for the board that is stored in 'data-url' attribute when an element with class 'board-image-container' is clicked.
 document.querySelectorAll('.board-image-container').forEach(function(element) {
-    element.addEventListener('click', function() {
+    element.addEventListener('click', function(event) {
+        // Check if the click was on a form button or any of its children
+        if (event.target.closest(".favourite-form button, #delete-board-temp button")) {
+            // If the click was on a favorite or delete button, do nothing
+            // The form submission is handled by the jQuery code below
+            return;
+        }
         var url = this.getAttribute('data-url');
         window.location.href = url;
-
-
     });
 });
 
 $(document).ready(function() {
-    $(".favourite-form button, #delete-board-temp button").on("click", function(e) {
+    // Prevent double submission
+    $('#list-board-form').on('submit', function() {
+        $('#submit-button').prop('disabled', true);
+        $('#upload-message').show(); // Show the upload message
+    });
+
+    // Handle favourite action
+    $(".favourite-form button").on("click", function(e) {
+        e.preventDefault(); // Prevent the default form submission
         e.stopPropagation();
+
+        var $form = $(this).closest("form");
+        var actionUrl = $form.attr("action");
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var $heartIcon = $(this).find(".bi-heart, .bi-heart-fill"); // Find the heart icon within the button
+
+        $.ajax({
+            url: actionUrl,
+            type: "POST",
+            data: $form.serialize(), // This already includes the CSRF token if your form is set up correctly
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrfToken); // Set the CSRF token in the request header
+            },
+            success: function(response) {
+                console.log("Success:", response);
+                // Assuming response is a string that includes the login prompt
+                if (typeof response === 'string' && response.includes('Please log in to access this page.')) {
+                    window.location.href = '/login'; // Redirect to the login page
+                } else if (typeof response === 'object') {
+                    // Handle favourite action
+                    if (response.action === 'added') {
+                        $heartIcon.removeClass("bi-heart").addClass("bi-heart-fill text-red");
+                    } else if (response.action === 'removed') {
+                        $heartIcon.removeClass("bi-heart-fill text-red").addClass("bi-heart");
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", status, error);
+                alert("An error occurred: " + error);
+            }
+        });
+    });
+
+    // Handle delete action
+    $("#delete-board-temp button").on("click", function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        e.stopPropagation();
+
+        var $form = $(this).closest("form");
+        var actionUrl = $form.attr("action");
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        $.ajax({
+            url: actionUrl,
+            type: "POST",
+            data: $form.serialize(), // This already includes the CSRF token if your form is set up correctly
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRFToken", csrfToken); // Set the CSRF token in the request header
+            },
+            success: function(response) {
+                console.log("Success:", response);
+                // Assuming response is a string that includes the login prompt
+                if (typeof response === 'string' && response.includes('Please log in to access this page.')) {
+                    window.location.href = '/login'; // Redirect to the login page
+                } else if (typeof response === 'object') {
+                    // Handle delete action
+                    if (response.status === 'success') {
+                        $form.closest('.board-item').remove(); // Assuming the board item is wrapped in an element with class 'board-item'
+                        updateResults();
+                    } else if (response.status === 'error') {
+                        alert(response.message);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", status, error);
+                alert("An error occurred: " + error);
+            }
+        });
     });
 });
+
+// $(document).ready(function() {
+//     $(".favourite-form button, #delete-board-temp button").on("click", function(e) {
+//         e.stopPropagation();
+//     });
+// });
+
 
 // This function changes the main image to the one clicked in the 'extra-image' class.
 $(document).ready(function(){
@@ -386,4 +486,5 @@ if (boardLocationText) {
         alert('Change your location in the top right of the page');
     });
 }
+
 
