@@ -581,8 +581,12 @@ def create_app():
             flash('Board not found.', 'error')
             return redirect(url_for('index'))
         
+        # filter the extra photos that don't specify a file
+        board.extra_photos = [photo for photo in board.extra_photos if not photo.endswith('/')]
+        
          # Print the URLs of the extra photos
         if board.extra_photos:
+            print("Extra photos:")
             for photo in board.extra_photos:
                 print(photo)
 
