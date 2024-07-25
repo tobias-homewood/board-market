@@ -93,6 +93,15 @@ body{
     color: #343a40;
 }
 
+.btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+}
+.btn-dark:hover {
+    background-color: #5f6468;
+    border-color: #5f6468;
+}
+
 #homepage-instructions{
     text-align: center;
 }
