@@ -230,6 +230,20 @@ def create_app():
 
         return str(numerator) + ('' if denominator == 1 else '/' + str(denominator)) + '"'
 
+    def convert_decimal_to_sixteenth(value):
+        try:
+            value = float(value)
+        except ValueError:
+            return ''
+
+        numerator = round(value * 16)
+        denominator = 16
+
+        if numerator == 0:
+            return '0'
+
+        return str(numerator) + ('' if denominator == 1 else '/' + str(denominator))
+
     def is_safe_url(target):
         """Check if the URL is safe to redirect to."""
         ref_url = urlparse(request.host_url)
@@ -719,7 +733,12 @@ def create_app():
         else:
             form = BoardForm(obj=board)
 
+            # fix units in width, depth inches, convert to fractions
+            form.width_fraction.data = convert_decimal_to_sixteenth(board.width_fraction)
+            form.depth_fraction.data = convert_decimal_to_sixteenth(board.depth_fraction)
+
             # add the photos to the form
+            # location can change?
 
             return render_template('edit_board.html', form=form, board=board)
 
