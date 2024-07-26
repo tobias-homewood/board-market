@@ -125,7 +125,7 @@ window.onload = function () {
         var boardLocation = document.getElementById('board_location_coordinates');
 
         if (navbarLocation) {
-            navbarLocation.innerHTML = savedLocation;
+            navbarLocation.innerHTML = 'Location set to: ' + savedLocation;
         }
 
         if (boardLocation) {
