@@ -58,6 +58,11 @@
             <div id="volume-slider" data-min-volume="{{ session['min_volume'] or 0 }}" data-max-volume="{{ session['max_volume'] or 100 }}"></div>
             <input type="hidden" id="min-volume" name="min_volume" value="{{ form.min_volume.data|default(0) }}">
             <input type="hidden" id="max-volume" name="max_volume" value="{{ form.max_volume.data|default(100) }}">
+            <!-- Condition filter -->
+            <p id="condition-value" class="slider-title">Condition</p>
+            <div id="condition-slider" data-min-condition="0" data-max-condition="4"></div>
+            <input type="hidden" id="min-condition" name="min_condition" value="0">
+            <input type="hidden" id="max-condition" name="max_condition" value="4">
             <br>      
         </form>
     </div>
