@@ -141,7 +141,15 @@ body{
 .list-board-container select {
     height: 20px; 
     font-size: 0.7em; 
-    flex: 2
+    flex: 2;
+    width: 100%;
+}
+.input-field {
+    width: 100%; /* Set the width to 100% of the parent container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+.small-input {
+    width: 25% !important; /* Set the width to 30% for smaller input fields */
 }
 
 .list-board-input::placeholder,
@@ -538,7 +546,8 @@ body{
 #length-slider,
 #width-slider,
 #depth-slider,
-#volume-slider {
+#volume-slider,
+#condition-slider {
     width: 90%;
     font-size: 0.6em;
 }
