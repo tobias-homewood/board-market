@@ -25,7 +25,7 @@
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.asking_price.label }}</label>
-                <div class="list-board-input">{{ form.asking_price(class_='input-field') }}</div>
+                <div class="list-board-input">{{ form.asking_price(class_='input-field', min=1, max=2000) }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.condition.label }}</label>
@@ -41,7 +41,7 @@
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.volume_litres.label }}</label>
-                <div class="list-board-input">{{ form.volume_litres(class_='input-field') }}</div>
+                <div class="list-board-input">{{ form.volume_litres(class_='input-field', min=1, max=100) }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">Board Length</label>
