@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, IntegerField, SelectField, TextAreaField, PasswordField, MultipleFileField, ValidationError
-from wtforms.validators import InputRequired, Email, Length, Optional, NumberRange
+from wtforms.validators import InputRequired, Email, Length, Optional, NumberRange, DataRequired
 from flask_wtf.file import FileField, FileAllowed
 import math
 
@@ -35,11 +35,11 @@ class BoardForm(FlaskForm):
     board_manufacturer = StringField('Board Manufacturer', validators=[InputRequired()])
     board_length_feet = SelectField('Board Length (Feet)', choices=[(str(i), str(i)) for i in range(15)], validators=[InputRequired()])
     board_length_inches = SelectField('Board Length (Inches)', choices=[(str(i), str(i)) for i in range(12)], validators=[InputRequired()])     
-    condition = SelectField('Condition', choices=[('New', 'New'), ('Excellent', 'Excellent'), ('Great', 'Great'), ('Good', 'Good'), ('Poor', 'Poor')], validators=[InputRequired()])    
-    sell_or_rent = SelectField('Sell or Rent', choices=[('For sale', 'For sale'), ('For rent', 'For rent')], validators=[InputRequired()])    
+    condition = SelectField('Condition', choices=[('', 'Select an option'),('New', 'New'), ('Excellent', 'Excellent'), ('Great', 'Great'), ('Good', 'Good'), ('Poor', 'Poor')], validators=[DataRequired()])    
+    sell_or_rent = SelectField('Sell or Rent', choices=[('', 'Select an option'),('For sale', 'For sale'), ('For rent', 'For rent')], validators=[DataRequired()])    
     board_location_text = StringField('Board Location', validators=[InputRequired()])
     board_location_coordinates = StringField('Board Location Coordinates', validators=[InputRequired()])
-    delivery_options = SelectField('Collection / Delivery', choices=[('Pick up only', 'Pick up only'), ('Local delivery', 'Local delivery'), ('National delivery', 'National delivery'), ('International delivery', 'International delivery')], validators=[InputRequired()])    
+    delivery_options = SelectField('Collection / Delivery', choices=[('', 'Select an option'),('Pick up only', 'Pick up only'), ('Local delivery', 'Local delivery'), ('National delivery', 'National delivery'), ('International delivery', 'International delivery')], validators=[DataRequired()])    
     model = StringField('Model')
     width_integer = SelectField('Width Integer', choices=[(str(i), str(i)) for i in range(0, 30)], validators=[InputRequired()])
     width_fraction = SelectField('Width Fraction', choices = [(f'{i}/16', '0' if i == 0 else f'{simplify_fraction(i, 16)[0]}/{simplify_fraction(i, 16)[1]}') for i in range(16)], validators=[InputRequired()])    
@@ -47,6 +47,7 @@ class BoardForm(FlaskForm):
     depth_fraction = SelectField('Depth Fraction', choices = [(f'{i}/16', '0' if i == 0 else f'{simplify_fraction(i, 16)[0]}/{simplify_fraction(i, 16)[1]}') for i in range(16)], validators=[InputRequired()])    
     volume_litres = DecimalField('Volume (Litres)', places=2, rounding=None, validators=[InputRequired()])
     fin_setup = SelectField('Fin Setup', choices=[
+        ('', 'Select an option'),
         ('Single fin', 'Single fin'), 
         ('Twin fin', 'Twin fin'), 
         ('Thruster', 'Thruster'), 
@@ -54,15 +55,16 @@ class BoardForm(FlaskForm):
         ('Quad', 'Quad'), 
         ('5 fin', '5 fin'), 
         ('Other', 'Other')
-    ], validators=[InputRequired()])
+    ], validators=[DataRequired()])
     board_material = SelectField('Board Material', choices=[
+        ('', 'Select an option'),   
         ('Polyurethane (PU)', 'Polyurethane (PU)'), 
         ('Epoxy (EPS)', 'Epoxy (EPS)'), 
         ('Foam', 'Foam'), 
         ('Wooden', 'Wooden'), 
         ('Carbon', 'Carbon'), 
         ('Other', 'Other')
-    ], validators=[InputRequired()])
+    ], validators=[DataRequired()])
     extra_details = TextAreaField('Extra Details', validators=[Length(max=255)])
     main_photo = FileField('Main Photo', validators=[FileAllowed(['jpg', 'png','jpeg']), InputRequired()])
     extra_photos = MultipleFileField('Extra Photos', validators=[FileAllowed(['jpg', 'png','jpeg']), Optional(), validate_photo_count])
