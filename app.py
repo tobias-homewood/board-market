@@ -477,49 +477,7 @@ def create_app():
 
         query = Board.query  # start with a base query
 
-        # if not request.args or not form.validate():
-        #     # Populate the form with session data
-        #     form.min_length.data = session.get('min_length')
-        #     form.max_length.data = session.get('max_length')
-        #     form.min_price.data = session.get('min_price')
-        #     form.max_price.data = session.get('max_price')
-        #     form.min_width.data = session.get('min_width')
-        #     form.max_width.data = session.get('max_width')
-        #     form.min_depth.data = session.get('min_depth')
-        #     form.max_depth.data = session.get('max_depth')
-        #     form.min_volume.data = session.get('min_volume')
-        #     form.max_volume.data = session.get('max_volume')
-        #     form.sell_or_rent.data = session.get('sell_or_rent')
-        #     form.board_location_text.data = session.get('board_location_text')
-        #     form.board_location_coordinates.data = session.get('board_location_coordinates')
-        #     form.board_manufacturer.data = session.get('board_manufacturer')
-        #     form.model.data = session.get('model')
-        #     form.condition.data = session.get('condition')
-        #     form.delivery_options.data = session.get('delivery_options')
-        #     form.fin_setup.data = session.get('fin_setup')
-        #     form.board_material.data = session.get('board_material')
-        # else:
         query = apply_filters(query, form)
-        #     # Update session with form data
-        #     session['min_length'] = form.min_length.data
-        #     session['max_length'] = form.max_length.data
-        #     session['min_price'] = form.min_price.data
-        #     session['max_price'] = form.max_price.data
-        #     session['min_width'] = form.min_width.data
-        #     session['max_width'] = form.max_width.data
-        #     session['min_depth'] = form.min_depth.data
-        #     session['max_depth'] = form.max_depth.data
-        #     session['min_volume'] = form.min_volume.data
-        #     session['max_volume'] = form.max_volume.data
-        #     session['sell_or_rent'] = form.sell_or_rent.data
-        #     session['board_location_text'] = form.board_location_text.data
-        #     session['board_location_coordinates'] = form.board_location_coordinates.data
-        #     session['board_manufacturer'] = form.board_manufacturer.data
-        #     session['model'] = form.model.data
-        #     session['condition'] = form.condition.data
-        #     session['delivery_options'] = form.delivery_options.data
-        #     session['fin_setup'] = form.fin_setup.data
-        #     session['board_material'] = form.board_material.data
 
         boards = query.all()  # execute the query
         
