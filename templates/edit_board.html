@@ -12,16 +12,16 @@
                 <div class="list-board-input">{{ form.board_location_text(id='board-location-text', readonly=True) }}</div>
             </div>
             <div class="list-board-container">
-                <label class="list-board-label">{{ form.asking_price.label }}</label>
-                <div class="list-board-input">{{ form.asking_price() }}</div>
-            </div>
-            <div class="list-board-container">
                 <label class="list-board-label">{{ form.board_manufacturer.label }}</label>
                 <div class="list-board-input">{{ form.board_manufacturer() }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.model.label }}</label>
                 <div class="list-board-input">{{ form.model() }}</div>
+            </div>
+            <div class="list-board-container">
+                <label class="list-board-label">{{ form.asking_price.label }}</label>
+                <div class="list-board-input">{{ form.asking_price() }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.condition.label }}</label>
@@ -52,6 +52,10 @@
                 <div class="list-board-input">{{ form.depth_integer() }} {{ form.depth_fraction() }} Inches</div>
             </div>
             <div class="list-board-container">
+                <label class="list-board-label">{{ form.volume_litres.label }}</label>
+                <div class="list-board-input">{{ form.volume_litres() }}</div>
+            </div>
+            <div class="list-board-container">
                 <label class="list-board-label">{{ form.fin_setup.label }}</label>
                 <div class="list-board-input">{{ form.fin_setup() }}</div>
             </div>
@@ -80,10 +84,6 @@
                     </ul>
                 {% endif %}
                 {{ form.extra_photos(class_="form-control-file", multiple=True) }}
-            </div>
-            <div class="list-board-container">
-                <label class="list-board-label">{{ form.volume_litres.label }}</label>
-                <div class="list-board-input">{{ form.volume_litres() }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.extra_details.label }}</label>
