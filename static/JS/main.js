@@ -149,6 +149,7 @@ function updateResults() {
                             }">${board.username}</a></p>
                         </div>
                    
+                        ${ board.user_id !== current_user_id ? `
                         <form class="favourite-form" method="POST" action="/toggle_favourite/${
                             board.board_id
                         }" data-board-id="${board.board_id}">
@@ -161,6 +162,7 @@ function updateResults() {
                                 }"></i>
                             </button>
                         </form>
+                        ` : ""}
                         ${
                             board.user_id === current_user_id
                                 ? `
