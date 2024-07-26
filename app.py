@@ -96,6 +96,17 @@ def create_app():
     def apply_filters(query, form):
         # Print the form data for debugging purposes
         print(f"Form data in apply_filters: {form.data}")
+        condition_labels = ['Poor', 'Good', 'Great', 'Excellent', 'New']
+
+
+        if form.min_condition.data is None:
+            form.min_condition.data = 0
+        if form.max_condition.data is None:
+            form.max_condition.data = 4
+
+        min_condition = form.min_condition.data
+        max_condition = form.max_condition.data
+        query = query.filter(Board.condition.in_(condition_labels[min_condition:max_condition + 1]))
         
         # If both min_price and max_price are provided, filter the query by price
         if form.min_price.data is not None and form.max_price.data is not None:
@@ -115,10 +126,6 @@ def create_app():
             min_length = form.min_length.data
             max_length = form.max_length.data
             query = query.filter(Board.board_length_total.between(min_length, max_length))
-
-        # If condition is provided, filter the query by condition
-        if form.condition.data:
-            query = query.filter(Board.condition.ilike(f"%{form.condition.data}%"))
 
         # If sell_or_rent is provided, filter the query by sell_or_rent
         if form.sell_or_rent.data:
