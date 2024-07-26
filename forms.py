@@ -84,6 +84,8 @@ class SearchForm(FlaskForm):
     board_location_coordinates = StringField('Board Location Coordinates', validators=[Optional()])
     max_distance = IntegerField('Distance from me (km)', default=50, validators=[Optional(), NumberRange(min=1)])
     delivery_options = SelectField('Collection / Delivery', choices=[('', 'Any'), ('Pick up only', 'Pick up only'), ('Local delivery', 'Local delivery'), ('National delivery', 'National delivery'), ('International delivery', 'International delivery')], validators=[Optional()])    
+    min_delivery = IntegerField('Minimum Delivery Options', validators=[Optional()])
+    max_delivery = IntegerField('Maximum Delivery Options', validators=[Optional()])
     model = StringField('Model', validators=[Optional()])
     width_integer = SelectField('Width Integer', choices=[('', 'Any')] + [(str(i), str(i)) for i in range(15, 26)], validators=[Optional()])
     width_fraction = SelectField('Width Fraction', choices=[('', 'Any')] + [(f'{i}/16', f'{i}/16') for i in range(0, 16)], validators=[Optional()])    

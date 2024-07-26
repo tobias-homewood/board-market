@@ -96,9 +96,9 @@ def create_app():
     def apply_filters(query, form):
         # Print the form data for debugging purposes
         print(f"Form data in apply_filters: {form.data}")
+
+        # Condition filter slider
         condition_labels = ['Poor', 'Good', 'Great', 'Excellent', 'New']
-
-
         if form.min_condition.data is None:
             form.min_condition.data = 0
         if form.max_condition.data is None:
@@ -107,6 +107,18 @@ def create_app():
         min_condition = form.min_condition.data
         max_condition = form.max_condition.data
         query = query.filter(Board.condition.in_(condition_labels[min_condition:max_condition + 1]))
+
+
+        # Delivery filter slider
+        delivery_labels = ['Pick up only', 'Local delivery', 'National delivery', 'International delivery']
+        if form.min_delivery.data is None:
+            form.min_delivery.data = 0
+        if form.max_delivery.data is None:
+            form.max_delivery.data = 3
+
+        min_delivery = form.min_delivery.data
+        max_delivery = form.max_delivery.data
+        query = query.filter(Board.delivery_options.in_(delivery_labels[min_delivery:max_delivery + 1]))
         
         # If both min_price and max_price are provided, filter the query by price
         if form.min_price.data is not None and form.max_price.data is not None:

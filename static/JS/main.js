@@ -456,6 +456,52 @@ if (window.location.pathname === "/search_boards") {
                 conditionLabels[maxCondition]
         );
 
+         // Initialize delivery slider
+        var deliveryLabels = ['Pick up only', 'Local delivery', 'National delivery', 'International delivery'];
+         var savedMinDelivery = localStorage.getItem("minDelivery")
+             ? parseInt(localStorage.getItem("minDelivery"), 10)
+             : $("#delivery-slider").data("min-delivery");
+         var savedMaxDelivery = localStorage.getItem("maxDelivery")
+             ? parseInt(localStorage.getItem("maxDelivery"), 10)
+             : $("#delivery-slider").data("max-delivery");
+ 
+         var minDelivery =
+             isNaN(savedMinDelivery) || savedMinDelivery < 0
+                 ? 0
+                 : savedMinDelivery;
+         var maxDelivery =
+             isNaN(savedMaxDelivery) || savedMaxDelivery > 3
+                 ? 3
+                 : savedMaxDelivery;
+ 
+         $("#delivery-slider").slider({
+             range: true,
+             min: 0,
+             max: 3,
+             values: [minDelivery, maxDelivery],
+             slide: function (event, ui) {
+                 $("#min-delivery").val(ui.values[0]);
+                 $("#max-delivery").val(ui.values[1]);
+                 $("#delivery-value").text(
+                     "Delivery: " +
+                         deliveryLabels[ui.values[0]] +
+                         " - " +
+                         deliveryLabels[ui.values[1]]
+                 );
+             },
+             change: function (event, ui) {
+                 localStorage.setItem("minDelivery", ui.values[0]);
+                 localStorage.setItem("maxDelivery", ui.values[1]);
+                 updateResults();
+             },
+         });
+         $("#delivery-value").text(
+             "Delivery: " +
+                 deliveryLabels[minDelivery] +
+                 " - " +
+                 deliveryLabels[maxDelivery]
+         );
+
         var formSelectors = [
             "#sell_or_rent",
             "#board_location_coordinates",
