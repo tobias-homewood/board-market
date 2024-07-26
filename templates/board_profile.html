@@ -43,15 +43,20 @@
     <div class="board-profile-data">
         <h2 class="board-profile-title">{{ board.board_manufacturer }} - {{ board.model }} 
         </h2>
+        {% if current_user.id == board.user_id %}
         <a href="{{ url_for('edit_board', board_id=board.board_id) }}" class="btn btn-dark">Edit</a>
         <button class="btn btn-danger" form="delete-board-temp" type="submit">Delete</button>
-        {% if current_user.id == board.user_id %}
             <!-- Delete form -->
             <form id="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
                 {{ form.hidden_tag() }} <!-- CSRF token for form -->
             </form>
         {% endif %}
-        <p>{{ board.sell_or_rent }} - €{{ board.asking_price }}</p>
+        <p>
+            {{ board.sell_or_rent }} - €{{ board.asking_price }}
+            {% if board.sell_or_rent == 'For rent' %}
+                per day
+            {% endif %}
+        </p>
         <p>Length: {{ board.board_length_feet }}' {{ board.board_length_inches }}"</p>
         <p>Volume: {{ board.volume_litres }} L</p>
         <p>Width: {{ board.width_integer }} {{ convert_decimal_to_fraction(board.width_fraction) }}</p>
