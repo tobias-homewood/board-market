@@ -149,7 +149,9 @@ function updateResults() {
                             }">${board.username}</a></p>
                         </div>
                    
-                        ${ board.user_id !== current_user_id ? `
+                        ${
+                            board.user_id !== current_user_id
+                                ? `
                         <form class="favourite-form" method="POST" action="/toggle_favourite/${
                             board.board_id
                         }" data-board-id="${board.board_id}">
@@ -162,11 +164,13 @@ function updateResults() {
                                 }"></i>
                             </button>
                         </form>
-                        ` : ""}
+                        `
+                                : ""
+                        }
                         ${
                             board.user_id === current_user_id
                                 ? `
-                        <form id="delete-board-temp" method="POST" action="/delete_board/${board.board_id}">
+                        <form class="delete-board-temp" method="POST" action="/delete_board/${board.board_id}">
                             <input type="hidden" name="csrf_token" value="${csrfToken}">
                             <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
                                 <i class="bi bi-trash trash-temp"></i>
@@ -458,51 +462,56 @@ if (window.location.pathname === "/search_boards") {
                 conditionLabels[maxCondition]
         );
 
-         // Initialize delivery slider
-        var deliveryLabels = ['Pick up only', 'Local delivery', 'National delivery', 'International delivery'];
-         var savedMinDelivery = localStorage.getItem("minDelivery")
-             ? parseInt(localStorage.getItem("minDelivery"), 10)
-             : $("#delivery-slider").data("min-delivery");
-         var savedMaxDelivery = localStorage.getItem("maxDelivery")
-             ? parseInt(localStorage.getItem("maxDelivery"), 10)
-             : $("#delivery-slider").data("max-delivery");
- 
-         var minDelivery =
-             isNaN(savedMinDelivery) || savedMinDelivery < 0
-                 ? 0
-                 : savedMinDelivery;
-         var maxDelivery =
-             isNaN(savedMaxDelivery) || savedMaxDelivery > 3
-                 ? 3
-                 : savedMaxDelivery;
- 
-         $("#delivery-slider").slider({
-             range: true,
-             min: 0,
-             max: 3,
-             values: [minDelivery, maxDelivery],
-             slide: function (event, ui) {
-                 $("#min-delivery").val(ui.values[0]);
-                 $("#max-delivery").val(ui.values[1]);
-                 $("#delivery-value").text(
-                     "Delivery: " +
-                         deliveryLabels[ui.values[0]] +
-                         " - " +
-                         deliveryLabels[ui.values[1]]
-                 );
-             },
-             change: function (event, ui) {
-                 localStorage.setItem("minDelivery", ui.values[0]);
-                 localStorage.setItem("maxDelivery", ui.values[1]);
-                 updateResults();
-             },
-         });
-         $("#delivery-value").text(
-             "Delivery: " +
-                 deliveryLabels[minDelivery] +
-                 " - " +
-                 deliveryLabels[maxDelivery]
-         );
+        // Initialize delivery slider
+        var deliveryLabels = [
+            "Pick up only",
+            "Local delivery",
+            "National delivery",
+            "International delivery",
+        ];
+        var savedMinDelivery = localStorage.getItem("minDelivery")
+            ? parseInt(localStorage.getItem("minDelivery"), 10)
+            : $("#delivery-slider").data("min-delivery");
+        var savedMaxDelivery = localStorage.getItem("maxDelivery")
+            ? parseInt(localStorage.getItem("maxDelivery"), 10)
+            : $("#delivery-slider").data("max-delivery");
+
+        var minDelivery =
+            isNaN(savedMinDelivery) || savedMinDelivery < 0
+                ? 0
+                : savedMinDelivery;
+        var maxDelivery =
+            isNaN(savedMaxDelivery) || savedMaxDelivery > 3
+                ? 3
+                : savedMaxDelivery;
+
+        $("#delivery-slider").slider({
+            range: true,
+            min: 0,
+            max: 3,
+            values: [minDelivery, maxDelivery],
+            slide: function (event, ui) {
+                $("#min-delivery").val(ui.values[0]);
+                $("#max-delivery").val(ui.values[1]);
+                $("#delivery-value").text(
+                    "Delivery: " +
+                        deliveryLabels[ui.values[0]] +
+                        " - " +
+                        deliveryLabels[ui.values[1]]
+                );
+            },
+            change: function (event, ui) {
+                localStorage.setItem("minDelivery", ui.values[0]);
+                localStorage.setItem("maxDelivery", ui.values[1]);
+                updateResults();
+            },
+        });
+        $("#delivery-value").text(
+            "Delivery: " +
+                deliveryLabels[minDelivery] +
+                " - " +
+                deliveryLabels[maxDelivery]
+        );
 
         var formSelectors = [
             "#sell_or_rent",
@@ -595,7 +604,7 @@ document.querySelectorAll(".board-image-container").forEach(function (element) {
         // Check if the click was on a form button or any of its children
         if (
             event.target.closest(
-                ".favourite-form button, #delete-board-temp button"
+                ".favourite-form button, .delete-board-temp button"
             )
         ) {
             // If the click was on a favorite or delete button, do nothing
@@ -613,6 +622,9 @@ function addEventListeners() {
         $("#submit-button").prop("disabled", true);
         $("#upload-message").show(); // Show the upload message
     });
+
+    // Remove any existing click event listeners on the button to prevent multiple bindings
+    $(".favourite-form button").off("click");
 
     // Handle favourite action
     $(".favourite-form button").on("click", function (e) {
@@ -661,8 +673,11 @@ function addEventListeners() {
         });
     });
 
+    // Remove any existing click event listeners on the button to prevent multiple bindings
+    $(".delete-board-temp button").off("click");
+
     // Handle delete action
-    $("#delete-board-temp button").on("click", function (e) {
+    $(".delete-board-temp button").on("click", function (e) {
         e.preventDefault(); // Prevent the default form submission
         e.stopPropagation();
 
