@@ -315,7 +315,12 @@ body{
     right: 5px;
 }
 
-#delete-board-temp {
+.form-inline {
+    position: static; 
+    display: inline-flex; 
+}
+
+.delete-board-temp {
     position: absolute;
     top: 1px;
     background-color: beige;

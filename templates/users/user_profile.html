@@ -1,60 +1,90 @@
-{% extends "index.html" %} 
-{% block content %}
+{% extends "index.html" %} {% block content %}
 <h2>{{ user.username }}</h2>
+{% if user.id == current_user.id %}
 <p>Email: {{ user.email }}</p>
+{% else %}
+<a class="btn btn-dark" href="/contact">Send a message</a>
+{% endif %}
 <p>Bio: {{ user.bio }}</p>
 <div class="image-container">
-    <img src="{{ image_url }}" alt="User image">
+    <img src="{{ image_url }}" alt="User image" />
 </div>
-<!-- Favourite Boards -->
-<h3>Favourite Boards</h3>
-{% if user.favourite_boards %}
-    <ul>
-    {% for board in user.favourite_boards %}
-        <li>
-            {{ board.board_manufacturer }} - {{ board.model }}
-            <!-- Favourite form -->
-            <form class="favourite-form" method="POST" action="{{ url_for('toggle_favourite', board_id=board.board_id) }}" style="margin-left: 10px; display: inline;" data-board-id="{{ board.board_id }}">
-                {{ form.csrf_token }}
-                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
-                    <i class="bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"></i>
-                </button>
-            </form>
-        </li>
-    {% endfor %}
-    </ul>
+
+<!-- User's Boards -->
+{% if user.id == current_user.id %}
+<h3>My Boards</h3>
 {% else %}
-    <p>No favourite boards yet.</p>
+<h3>{{ user.username }}'s Boards</h3>
 {% endif %}
-<!-- My Boards -->
-{% if current_user.id == user.id %}
-    <h3>My Boards</h3>
-    {% if user.user_boards %}
-        <ul>
-        {% for board in user.user_boards %}
-            <li>
-                {{ board.board_manufacturer }} - {{ board.model }}
-                <!-- Favourite form -->
-                {% if current_user.id != board.user_id %}
-                    <!-- Favourite form -->
-                    <form class="favourite-form" method="POST" action="{{ url_for('toggle_favourite', board_id=board.board_id) }}" data-board-id="{{ board.board_id }}">
-                        {{ form.csrf_token }}
-                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
-                            <i class="bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"></i> <!-- Heart icon, filled if the board is a favourite -->
-                        </button>
-                    </form>
-                {% endif %}
-                <!-- Delete form -->
-                {% if current_user.id == board.user_id %}
-                    <form class="delete-form" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
-                        <input type="submit" value="Delete" /> <!-- Delete button -->
-                    </form>
-                {% endif %}
-            </li>
-        {% endfor %}
-        </ul>
+<ul>
+    {% for board in user.user_boards %}
+    <li>
+        <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+        {{ board.board_manufacturer }} - {{ board.model }}
+        </a>
+        <!-- Favourite form -->
+        {% if current_user.id != board.user_id %}
+        <form
+            class="favourite-form form-inline"
+            method="POST"
+            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            data-board-id="{{ board.board_id }}"
+        >
+            {{ form.csrf_token }}
+            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                <i
+                    class="bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"
+                ></i>
+                <!-- Heart icon, filled if the board is a favourite -->
+            </button>
+        </form>
+        {% endif %}
+        <!-- Delete form -->
+        {% if current_user.id == board.user_id %}
+        <form
+            class="delete-form"
+            method="POST"
+            action="{{ url_for('delete_board', board_id=board.board_id) }}"
+        >
+            <input type="submit" value="Delete" />
+            <!-- Delete button -->
+        </form>
+        {% endif %}
+    </li>
     {% else %}
-        <p>No boards uploaded yet.</p>
-    {% endif %}
+    <p>No boards uploaded yet.</p>
+    {% endfor %}
+</ul>
+<!-- Favourite Boards -->
+{% if user.id == current_user.id %}
+<h3>Favourite Boards</h3>
+{% else %}
+<h3>{{ user.username }}'s Favourite Boards</h3>
 {% endif %}
+<ul>
+    {% for board in user.favourite_boards %}
+    <li>
+        <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+            {{ board.board_manufacturer }} - {{ board.model }}
+        </a>
+        <!-- Favourite form -->
+        <form
+            class="favourite-form form-inline"
+            method="POST"
+            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            data-board-id="{{ board.board_id }}"
+        >
+            {{ form.csrf_token }}
+            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                <i
+                    class="bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"
+                ></i>
+            </button>
+        </form>
+    </li>
+
+    {% else %}
+    <p>No favourite boards yet.</p>
+    {% endfor %}
+</ul>
 {% endblock %}

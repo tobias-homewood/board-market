@@ -120,7 +120,7 @@
                     {% endif %}
                     {% if current_user.id == board.user_id %}
                         <!-- Delete form -->
-                        <form id="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
+                        <form class="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
                             {{ form.hidden_tag() }} <!-- CSRF token for form -->
                             <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
                                 <i class="bi bi-trash trash-temp"></i> <!-- Bin icon -->
