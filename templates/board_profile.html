@@ -46,6 +46,22 @@
     </div>
     <div class="board-profile-data">
         <h2 class="board-profile-title">{{ board.board_manufacturer }} - {{ board.model }} 
+        {% if current_user.id != board.user_id %}
+        <!-- Favourite form -->
+        <form
+            class="favourite-form form-inline"
+            method="POST"
+            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            data-board-id="{{ board.board_id }}"
+        >
+            {{ form.csrf_token }}
+            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                <i
+                    class="bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"
+                ></i>
+            </button>
+        </form>
+        {% endif %}
         </h2>
         {% if current_user.id == board.user_id %}
         <a href="{{ url_for('edit_board', board_id=board.board_id) }}" class="btn btn-dark">Edit</a>
