@@ -144,7 +144,7 @@ function updateResults() {
                             <p class="board-data">Extra Details: ${
                                 board.extra_details
                             }</p>
-                            <p class="board-data">Added by: <a href="/user_profile/${
+                            <p class="board-data">Added by: <a href="/user/${
                                 board.username
                             }">${board.username}</a></p>
                         </div>
