@@ -23,6 +23,10 @@ class UserAddForm(FlaskForm):
     image_file = FileField('Profile Image', validators=[FileAllowed(['jpg', 'png','jpeg'])])
     bio = TextAreaField('Bio', validators=[Optional()])
 
+class UserEditForm(UserAddForm):
+    username = StringField('Username', validators=[Optional()])
+    new_password = PasswordField('New Password', validators=[Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[Length(min=6)])
 # Form for user login
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])

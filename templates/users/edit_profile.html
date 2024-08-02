@@ -1,0 +1,15 @@
+{% extends "index.html" %} {% block content %}
+<h2>Edit profile</h2>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }} {{ form.email.label }} {{ form.email() }}<br />
+    {{ "Current password" }} {{ form.password() }}<br />
+    {{ form.new_password.label }} {{ form.new_password() }}<br />
+    {{ form.confirm_password.label }} {{ form.confirm_password() }}<br />
+    {{ form.bio.label }} {{ form.bio(placeholder="Feel free to say a bit about
+    yourself") }}<br />
+    <a class="btn btn-dark" href="{{ url_for('change_pfp') }}"
+        >Change profile picture</a
+    ><br />
+    <input type="submit" value="Save changes" />
+</form>
+{% endblock %}

@@ -68,6 +68,16 @@ class User(UserMixin, db.Model):
 
         db.session.add(user)  # Add the user to the session
         return user  # Return the user
+    
+    @classmethod
+    def update(cls, user, email, password, image_url, bio):
+        user.email = email
+        user.image_url = image_url
+        user.bio = bio
+        if password:
+            user.user_password = generate_password_hash(password)
+        db.session.commit()
+        return user
 
     # Define class method to authenticate a user
     @classmethod

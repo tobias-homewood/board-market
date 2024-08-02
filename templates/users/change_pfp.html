@@ -1,0 +1,10 @@
+{% extends "index.html" %} {% block content %}
+<h2>Edit profile</h2>
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>Current image:</p>
+    <img src="{{ user.image_url }}" target="_blank"> <br />
+    {{ form.image_file.label }} {{ form.image_file() }}<br />
+    <input class="btn btn-primary" type="submit" value="Change profile picture" />
+</form>
+{% endblock %}

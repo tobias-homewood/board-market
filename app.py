@@ -1,7 +1,7 @@
 import smtplib
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User, Board, Message, SearchPreference, Favourites
-from forms import UserAddForm, LoginForm, BoardForm, SearchForm, ContactForm
+from forms import UserAddForm, LoginForm, BoardForm, SearchForm, ContactForm, UserEditForm
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy.exc import IntegrityError
 from werkzeug.datastructures import MultiDict
@@ -764,6 +764,71 @@ def create_app():
 
         return render_template('contact.html', user=user, board=board, form=form)
     
+    @app.route('/edit_profile', methods=['GET', 'POST'])
+    @login_required
+    def edit_profile():
+        form = UserEditForm(obj=current_user)
+
+        if request.method == 'GET':
+            # fill in the form with the current user's data
+            form.username.data = current_user.username
+            form.email.data = current_user.email
+            form.image_file.data = current_user.image_url
+            form.bio.data = current_user.bio
+
+
+        if form.validate_on_submit():
+            # Authenticate user
+            user = User.authenticate(current_user.username, form.password.data)
+
+            if user:
+                # update user
+                User.update(
+                    user=user,
+                    email=form.email.data,
+                    password=form.new_password.data,
+                    image_url=form.image_file.data,
+                    bio=form.bio.data
+                )
+                flash('Profile updated successfully!', 'success')
+                return redirect(url_for('user_profile', username=current_user.username))
+            else:
+                flash('Invalid password.', 'danger')
+        return render_template('users/edit_profile.html', form=form)
+
+    @app.route('/change_pfp', methods=['POST', 'GET'])
+    @login_required
+    def change_pfp():
+        form = UserEditForm(obj=current_user)
+        if form.validate_on_submit():
+            # Get the file from the form
+            image_file = request.files['image_file']
+            filename = secure_filename(image_file.filename)
+            print(f"Image file: {filename}")
+
+            # Upload the file to Google Cloud Storage
+            upload_blob(image_file, filename)
+
+
+            # Get the URL of the uploaded file
+            image_url = f"https://storage.googleapis.com/board-market/{filename}"
+            print(f"Image URL: {image_url}")
+
+            user = User.query.get(current_user.id)
+            
+            # update user
+            User.update(
+                user=user,
+                email=form.email.data,
+                password=form.new_password.data,
+                image_url=image_url,
+                bio=form.bio.data
+            )
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('user_profile', username=current_user.username)) 
+        
+        return render_template('users/change_pfp.html', form=form, user=current_user)
+
     return app
 
     
