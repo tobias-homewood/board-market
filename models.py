@@ -119,7 +119,7 @@ class Message(db.Model):
     # Define the columns for the table 'messages'
     message_id = db.Column(db.Integer, primary_key=True)  # Primary key
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # Foreign key referencing 'users' table
-    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # Foreign key referencing 'users' table
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # Foreign key referencing 'users' table
     board_id = db.Column(db.Integer, db.ForeignKey('boards.board_id'))  # Foreign key referencing 'boards' table
     message_content = db.Column(db.TEXT)
     sent_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())  # Default to current timestamp

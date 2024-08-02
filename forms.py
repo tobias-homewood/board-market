@@ -120,3 +120,6 @@ class SearchForm(FlaskForm):
     min_volume = DecimalField('Minimum Volume (Litres)', places=2, rounding=None, validators=[Optional()])
     max_volume = DecimalField('Maximum Volume (Litres)', places=2, rounding=None, validators=[Optional()])
     
+
+class ContactForm(FlaskForm):
+    message = TextAreaField('Message', validators=[InputRequired()])

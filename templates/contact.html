@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+
+{% block title %}Contact{% endblock %}
+{% block content %}
+<body>
+    <div id="list-board-title">Contact</div>
+    <div id="list-board-form-container">
+        <form id="list-board-form" method="POST" action="{{ url_for('contact', board_id=board.board_id, user_id=user.id) }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            {% if form.board_id %}
+                <p>Regarding 
+                    <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+                    {{ board.board_manufacturer }} - {{ board.model }}
+                    </a>
+                </p>
+            {% endif %}
+
+            <div class="list-board-container">
+                <label class="list-board-label">{{ form.message.label }}</label>
+                <div class="list-board-input">{{ form.message(class_='input-field') }}</div>
+            </div>
+            
+            <div class="list-board-container">
+                <button id="submit-button" type="submit">Send message</button>
+            </div>
+        
+        </form>
+    </div>
+</body>
+{% endblock %}
+</html>

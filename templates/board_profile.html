@@ -88,7 +88,9 @@
         <p>Board Material: {{ board.board_material }}</p>
         <p>Extra Details: {{ board.extra_details }}</p>
         <p>Added by: <a href="{{ url_for('user_profile', username=board.user.username) }}">{{ board.user.username }}</a></p>
-
+        {% if current_user.id != board.user_id %}
+        <a href="{{ url_for('contact', board_id=board.board_id, user_id=board.user_id) }}" class="btn btn-primary">Contact</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

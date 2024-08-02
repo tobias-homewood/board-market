@@ -1,6 +1,7 @@
+import smtplib
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User, Board, Message, SearchPreference, Favourites
-from forms import UserAddForm, LoginForm, BoardForm, SearchForm
+from forms import UserAddForm, LoginForm, BoardForm, SearchForm, ContactForm
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy.exc import IntegrityError
 from werkzeug.datastructures import MultiDict
@@ -8,6 +9,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy.orm import joinedload
 from flask_login import current_user, LoginManager, login_user, logout_user, login_required 
 from flask import Flask, request
+from flask_mail import Mail, Message
 from google.cloud import storage
 import uuid
 import math
@@ -24,7 +26,12 @@ from dotenv import load_dotenv
 # Set the GOOGLE_APPLICATION_CREDENTIALS environment variable
 load_dotenv(dotenv_path='secrets/keys.env')
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'secrets/my_service_account_key.json'
+DB_URI = os.getenv('DB_URI')
+SECRET_KEY = os.getenv('SECRET_KEY')
 MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY')
+MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+MAIL_PORT = os.getenv('MAIL_PORT')
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -75,13 +82,22 @@ def create_app():
     
     app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # 1 hour in seconds
     
-    app.config['SECRET_KEY'] = 'secret'
+    app.config['SECRET_KEY'] = SECRET_KEY
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///boardmarket'
+    app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
     app.config['SQLALCHEMY_ECHO'] = False
     app.debug = True
+
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = MAIL_PORT
+    app.config['MAIL_USERNAME'] = MAIL_USERNAME
+    app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    mail = Mail(app)
+
     db.init_app(app)
     print("App created successfully.")
 
@@ -719,7 +735,34 @@ def create_app():
 
             return render_template('edit_board.html', form=form, board=board)
 
+    @app.route('/contact/<int:user_id>', methods=['GET','POST'])
+    @login_required
+    def contact(user_id):
+        user = User.query.get_or_404(user_id)
+        board_id = request.args.get('board_id', default=None, type=int)
+        board = Board.query.get_or_404(board_id)
 
+        form = ContactForm()
+        if form.validate_on_submit():
+            with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT'], timeout=30) as server:
+                server.starttls()
+                server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+                msg = Message(
+                    subject=f"Board Market: Message regarding {board.board_manufacturer} - {board.model}",
+                    sender=MAIL_USERNAME,
+                    recipients=[user.email],
+                    html=f"<h2>Message regarding the board {board.board_manufacturer} - {board.model}</h2>"
+                        f"<p>Buyers contact email: <a href='mailto:{current_user.email}'>{current_user.email}</a></p>"
+                        f"<p>{form.message.data}</p>"
+                        f"<img src='{board.main_photo}' alt='Board Photo'>"   
+                )
+                mail.send(msg)
+
+                flash('Message sent successfully!', 'success')
+                return redirect(url_for('index'))
+            
+
+        return render_template('contact.html', user=user, board=board, form=form)
     
     return app
 
