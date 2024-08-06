@@ -610,3 +610,7 @@ body{
     width: 100px;
     height: 100px;
 }
+
+.profile-picture {
+    width: 20%;
+}

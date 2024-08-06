@@ -1,14 +1,12 @@
 {% extends "index.html" %} {% block content %}
 <h2>{{ user.username }}</h2>
-<a class="btn btn-dark" href="{{ url_for('edit_profile') }}">Edit profile</a>
 {% if user.id == current_user.id %}
+<a class="btn btn-dark" href="{{ url_for('edit_profile') }}">Edit profile</a>
 <p>Email: {{ user.email }}</p>
-{% else %}
-<a class="btn btn-dark" href="/contact">Send a message</a>
 {% endif %}
 <p>Bio: {{ user.bio }}</p>
 <div class="image-container">
-    <img src="{{ user.image_url }}" alt="User image" />
+    <img class="profile-picture" src="{{ user.image_url }}" alt="User image" />
 </div>
 
 <!-- User's Boards -->
