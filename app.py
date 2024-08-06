@@ -409,9 +409,6 @@ def create_app():
         user = User.query.options(joinedload(User.user_boards)).filter_by(username=username).first_or_404()
         form = UserAddForm()
 
-        # The image URL is stored in `user.image_url`
-        image_url = user.image_url
-
         return render_template('users/user_profile.html', user=user, form=form, image_url=image_url)
     
 

@@ -605,3 +605,8 @@ body{
     text-align: right;
     color: #aaa;
 }
+
+.edit-photos {
+    width: 100px;
+    height: 100px;
+}
