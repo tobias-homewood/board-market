@@ -409,7 +409,7 @@ def create_app():
         user = User.query.options(joinedload(User.user_boards)).filter_by(username=username).first_or_404()
         form = UserAddForm()
 
-        return render_template('users/user_profile.html', user=user, form=form, image_url=image_url)
+        return render_template('users/user_profile.html', user=user, form=form)
     
 
     @app.route('/list_board', methods=['GET', 'POST'])
