@@ -66,11 +66,11 @@
                             <small>
                                 {% if current_user.is_authenticated %} Logged in as:
                                 <a
-                                    href="{{ url_for('user_profile', username=current_user.username) }}"
-                                    >{{ current_user.username }}</a> | <a href="{{ url_for('logout') }}">Logout</a>
+                                    href="{{ url_for('user_routes.user_profile', username=current_user.username) }}"
+                                    >{{ current_user.username }}</a> | <a href="{{ url_for('user_routes.logout') }}">Logout</a>
                                 {% else %}
-                                <a href="{{ url_for('login') }}">Login</a> |
-                                <a href="{{ url_for('signup') }}">Create an account</a>
+                                <a href="{{ url_for('user_routes.login') }}">Login</a> |
+                                <a href="{{ url_for('user_routes.signup') }}">Create an account</a>
                                 {% endif %}
                             </small>
                             <p style="margin: 0">

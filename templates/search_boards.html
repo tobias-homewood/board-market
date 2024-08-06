@@ -105,7 +105,7 @@
                         <p class="board-data">Delivery Options: {{ board.delivery_options }}</p>
                         <p class="board-data">Fin Setup: {{ board.fin_setup }}</p>
                         <p class="board-data">Board Material: {{ board.board_material }}</p>
-                        <p class="board-data">Added by: <a href="{{ url_for('user_profile', username=board.user.username) }}">{{ board.user.username }}</a></p>
+                        <p class="board-data">Added by: <a href="{{ url_for('user_routes.user_profile', username=board.user.username) }}">{{ board.user.username }}</a></p>
             
                     </div>
                     {% if current_user.id != board.user_id %}
