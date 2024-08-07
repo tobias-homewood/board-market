@@ -10,7 +10,7 @@
 
             {% if form.board_id %}
                 <p>Regarding 
-                    <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+                    <a href="{{ url_for('board_routes.board_profile', board_id=board.board_id) }}">
                     {{ board.board_manufacturer }} - {{ board.model }}
                     </a>
                 </p>
