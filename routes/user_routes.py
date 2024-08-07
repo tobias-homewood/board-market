@@ -149,7 +149,14 @@ def edit_profile():
             return redirect(url_for('user_routes.user_profile', username=current_user.username))
         else:
             flash('Invalid password.', 'danger')
+    elif form.errors:
+        print(form.errors)
+        flash('Invalid submission:', 'danger')
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"- {field}: {error}", 'danger')
     return render_template('users/edit_profile.html', form=form)
+
 
 @user_routes.route('/change_pfp', methods=['POST', 'GET'])
 @login_required

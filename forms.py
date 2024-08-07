@@ -18,7 +18,7 @@ def simplify_fraction(numerator, denominator):
 # Form for adding a new user
 class UserAddForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[Length(min=6)])
+    password = PasswordField('Password', validators=[Length(min=6), InputRequired()])
     email = StringField('Email', validators=[InputRequired(), Email()])
     image_file = FileField('Profile Image', validators=[FileAllowed(['jpg', 'png','jpeg'])])
     bio = TextAreaField('Bio', validators=[Optional()])
