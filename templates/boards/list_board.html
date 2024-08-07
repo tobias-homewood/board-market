@@ -5,7 +5,7 @@
 <body>
     <div id="list-board-title">List Your Board</div>
     <div id="list-board-form-container">
-        <form id="list-board-form" method="POST" action="{{ url_for('list_board') }}" enctype="multipart/form-data">
+        <form id="list-board-form" method="POST" action="{{ url_for('board_routes.list_board') }}" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.board_location_text.label }}</label>

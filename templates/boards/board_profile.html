@@ -51,7 +51,7 @@
         <form
             class="favourite-form form-inline"
             method="POST"
-            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            action="{{ url_for('board_routes.toggle_favourite', board_id=board.board_id) }}"
             data-board-id="{{ board.board_id }}"
         >
             {{ form.csrf_token }}
@@ -64,10 +64,10 @@
         {% endif %}
         </h2>
         {% if current_user.id == board.user_id %}
-        <a href="{{ url_for('edit_board', board_id=board.board_id) }}" class="btn btn-dark">Edit</a>
+        <a href="{{ url_for('board_routes.edit_board', board_id=board.board_id) }}" class="btn btn-dark">Edit</a>
         <button class="btn btn-danger" form="delete-board-temp" type="submit">Delete</button>
             <!-- Delete form -->
-            <form id="delete-board-temp" class="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
+            <form id="delete-board-temp" class="delete-board-temp" method="POST" action="{{ url_for('board_routes.delete_board', board_id=board.board_id) }}">
                 {{ form.hidden_tag() }} <!-- CSRF token for form -->
             </form>
         {% endif %}

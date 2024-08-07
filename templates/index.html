@@ -123,12 +123,12 @@
                             <li class="nav-item">
                                 <a
                                     class="nav-link"
-                                    href="{{ url_for('list_board') }}"
+                                    href="{{ url_for('board_routes.list_board') }}"
                                     >List Board</a
                                 >
                                 <a
                                     class="nav-link"
-                                    href="{{ url_for('search_boards') }}"
+                                    href="{{ url_for('board_routes.search_boards') }}"
                                     >Search Boards</a
                                 >
                             </li>
@@ -157,10 +157,10 @@
             </h5>
             <div class="option-row">
                 <div class="option-col">
-                    <a href="{{ url_for('list_board') }}" class="btn btn-dark option-btn">List a Board</a>
+                    <a href="{{ url_for('board_routes.list_board') }}" class="btn btn-dark option-btn">List a Board</a>
                 </div>
                 <div class="option-col">
-                    <a href="{{ url_for('search_boards') }}" class="btn btn-dark option-btn">Search for a board</a>
+                    <a href="{{ url_for('board_routes.search_boards') }}" class="btn btn-dark option-btn">Search for a board</a>
                 </div>
             </div>
             {% endblock %}

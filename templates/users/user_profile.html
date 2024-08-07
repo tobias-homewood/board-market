@@ -18,7 +18,7 @@
 <ul>
     {% for board in user.user_boards %}
     <li>
-        <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+        <a href="{{ url_for('board_routes.board_profile', board_id=board.board_id) }}">
         {{ board.board_manufacturer }} - {{ board.model }}
         </a>
         <!-- Favourite form -->
@@ -26,7 +26,7 @@
         <form
             class="favourite-form form-inline"
             method="POST"
-            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            action="{{ url_for('board_routes.toggle_favourite', board_id=board.board_id) }}"
             data-board-id="{{ board.board_id }}"
         >
             {{ form.csrf_token }}
@@ -43,7 +43,7 @@
         <form
             class="delete-form"
             method="POST"
-            action="{{ url_for('delete_board', board_id=board.board_id) }}"
+            action="{{ url_for('board_routes.delete_board', board_id=board.board_id) }}"
         >
             <input type="submit" value="Delete" />
             <!-- Delete button -->
@@ -63,14 +63,14 @@
 <ul>
     {% for board in user.favourite_boards %}
     <li>
-        <a href="{{ url_for('board_profile', board_id=board.board_id) }}">
+        <a href="{{ url_for('board_routes.board_profile', board_id=board.board_id) }}">
             {{ board.board_manufacturer }} - {{ board.model }}
         </a>
         <!-- Favourite form -->
         <form
             class="favourite-form form-inline"
             method="POST"
-            action="{{ url_for('toggle_favourite', board_id=board.board_id) }}"
+            action="{{ url_for('board_routes.toggle_favourite', board_id=board.board_id) }}"
             data-board-id="{{ board.board_id }}"
         >
             {{ form.csrf_token }}

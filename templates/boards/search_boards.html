@@ -7,7 +7,7 @@
 <div id="main-search-container">
     <div id="filter-form"> <!-- Filter form, initially hidden -->
          
-        <form method="GET" action="{{ url_for('search_boards') }}"> <!-- Form action is the search_boards route -->
+        <form method="GET" action="{{ url_for('board_routes.search_boards') }}"> <!-- Form action is the search_boards route -->
             {{ form.hidden_tag() }} <!-- CSRF token for form -->
             <div class=form-drop-down-container>
                 <div id="filter-button-container">
@@ -91,8 +91,8 @@
                     <p >{{ board.volume_litres }} L</p>
                 </div>
             </div>
-            <!-- <a href="{{ url_for('board_profile', board_id=board.board_id) }}" class="board-link" style="color: inherit; text-decoration: none;"> -->
-                <div class="board-image-container" data-url="{{ url_for('board_profile', board_id=board.board_id) }}">
+            <!-- <a href="{{ url_for('board_routes.board_profile', board_id=board.board_id) }}" class="board-link" style="color: inherit; text-decoration: none;"> -->
+                <div class="board-image-container" data-url="{{ url_for('board_routes.board_profile', board_id=board.board_id) }}">
                         <img src="{{ board.main_photo }}" class="board-search board-image" alt="Board Image">
                     
                     <!-- Display board data --> 
@@ -110,7 +110,7 @@
                     </div>
                     {% if current_user.id != board.user_id %}
                     <!-- Favourite form -->
-                    <form class="favourite-form" method="POST" action="{{ url_for('toggle_favourite', board_id=board.board_id) }}" data-board-id="{{ board.board_id }}">
+                    <form class="favourite-form" method="POST" action="{{ url_for('board_routes.toggle_favourite', board_id=board.board_id) }}" data-board-id="{{ board.board_id }}">
                         {{ form.csrf_token }}
                         <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
                             <i class="heart-search bi {% if board in current_user.favourite_boards %}bi-heart-fill text-red{% else %}bi-heart{% endif %}"></i> <!-- Heart icon, filled if the board is a favourite -->
@@ -119,7 +119,7 @@
                     {% endif %}
                     {% if current_user.id == board.user_id %}
                         <!-- Delete form -->
-                        <form class="delete-board-temp" method="POST" action="{{ url_for('delete_board', board_id=board.board_id) }}">
+                        <form class="delete-board-temp" method="POST" action="{{ url_for('board_routes.delete_board', board_id=board.board_id) }}">
                             {{ form.hidden_tag() }} <!-- CSRF token for form -->
                             <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
                                 <i class="bi bi-trash trash-temp"></i> <!-- Bin icon -->
