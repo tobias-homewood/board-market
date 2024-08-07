@@ -186,6 +186,11 @@ $(document).ready(function () {
         "show.bs.collapse": function () {
             // When the 'mapContainer' element is expanded, show the 'mapWrapper' element
             $("#mapWrapper").css({"max-height": "300px", "opacity": "1"});
+
+            // scroll to the top of the page
+            $('html, body').animate({
+                scrollTop: $("#mapContainer").offset().top
+            }, 1000);
         },
     });
 });
