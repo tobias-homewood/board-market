@@ -55,8 +55,6 @@ def create_app():
             data = request.get_json()
             session['location_text'] = data['location_text']
             session['coordinates'] = data['coordinates']
-            print('Updated location:', data['location_text'])
-            print('Updated coordinates:', data['coordinates'])
             return jsonify({'message': 'Location updated'}), 200
         except Exception as e:
             print('Error updating location:', str(e))

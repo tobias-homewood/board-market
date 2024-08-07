@@ -81,16 +81,18 @@ def list_board():
         db.session.commit()
         flash('Board listed successfully!', 'success')
         return redirect(url_for('index'))
-    else:
+    elif form.errors:
+        print("Error while submitting form:")
         print(form.errors)
+        flash('Invalid submission:', 'danger')
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"- {field}: {error}", 'danger')
     return render_template('boards/list_board.html', form=form)
 
 @board_routes.route('/search_boards', methods=['GET']) 
 def search_boards(): 
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' 
-    # print(f"Is AJAX request: {is_ajax}") # Check if the request is identified as AJAX
-# Debugging: Print request headers to verify AJAX header presence
-    # print("Request headers:", request.headers)
     # Preprocess request arguments
     args = {k: v for k, v in request.args.items() if v != 'None'}
 
@@ -156,7 +158,6 @@ def search_boards():
                 'updated_at': board.updated_at.isoformat()  # Convert TIMESTAMP to ISO format string
             } for board in boards
         ]
-        print("AJAX response data:", jsonify({'boards': boards_data}).get_data(as_text=True))
         return jsonify({'boards': boards_data, 'user_id': current_user.id if current_user.is_authenticated else None, 'favourites': [favourite.board_id for favourite in favourites]})
 
     # For non-AJAX requests, render the template as before
@@ -185,20 +186,13 @@ def board_profile(board_id):
     
     # filter the extra photos that don't specify a file
     board.extra_photos = [photo for photo in board.extra_photos if not photo.endswith('/')]
-    
-        # Print the URLs of the extra photos
-    if board.extra_photos:
-        print("Extra photos:")
-        for photo in board.extra_photos:
-            print(photo)
+            
 
     return render_template('boards/board_profile.html', board=board, convert_decimal_to_fraction=convert_decimal_to_fraction, form=form)
 
 @board_routes.route('/delete_board/<int:board_id>', methods=['POST'])
 def delete_board(board_id):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' 
-    print(f"Is AJAX request: {is_ajax}")
-
     board = Board.query.get(board_id)
 
     if board:
@@ -212,7 +206,6 @@ def delete_board(board_id):
 
     if is_ajax:
         response = jsonify({'status': status, 'message': message})
-        print("AJAX response data:", response.get_data(as_text=True))
         return response
 
     flash(message)

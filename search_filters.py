@@ -5,7 +5,6 @@ from models import Board
 
 def apply_filters(query, form):
         # Print the form data for debugging purposes
-        print(f"Form data in apply_filters: {form.data}")
 
         # Condition filter slider
         condition_labels = ['Poor', 'Good', 'Great', 'Excellent', 'New']
@@ -65,7 +64,6 @@ def apply_filters(query, form):
         if form.board_location_coordinates.data:
             # Remove square brackets and split the string into lat and lon
             lon, lat = map(float, form.board_location_coordinates.data.strip('[]').split(','))
-            print(f"Form coordinates: {lon}, {lat}")  # Print the coordinates from the form
             if form.max_distance.data is not None:
                 max_distance = form.max_distance.data
             else:

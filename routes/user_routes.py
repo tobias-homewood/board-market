@@ -27,19 +27,16 @@ def signup():
     form = UserAddForm()
 
     if form.validate_on_submit():
-        print("Form validated")  # Debugging line
         try:
             # Get the file from the form
             image_file = request.files['image_file']
             filename = secure_filename(image_file.filename)
-            print(f"Image file: {filename}")  # Debugging line
 
             # Upload the file to Google Cloud Storage
             upload_blob(image_file, filename)
 
             # Get the URL of the uploaded file
             image_url = f"https://storage.googleapis.com/board-market/{filename}"
-            print(f"Image URL: {image_url}")  # Debugging line
 
             user = User.signup(
                 username=form.username.data,
@@ -48,22 +45,19 @@ def signup():
                 image_url=image_url,
                 bio=form.bio.data
             )
-            print("User signed up")  # Debugging line
 
             db.session.commit()
-            print("Database commit successful")  # Debugging line
 
         except IntegrityError:
-            print("IntegrityError occurred")  # Debugging line
             flash("Username already taken", 'danger')
             return render_template('users/signup.html', form=form)
 
         login_user(user)  # Use flask_login's login_user function
-        print("User logged in")  # Debugging line
 
         return redirect("/")
 
     else:
+        print("Error while submitting form:")
         print(form.errors)  # print form errors if validation fails
 
     return render_template('users/signup.html', form=form)
@@ -87,8 +81,6 @@ def login():
         if user:
             login_user(user)  # Use flask_login's login_user function
             flash(f"Hello, {user.username}!", "success")
-            print(f"next_page: {next_page}")  # Debug print
-            print(f"is_safe_url(next_page): {is_safe_url(next_page)}")  # Debug print
             if next_page and is_safe_url(next_page):
                 return redirect(next_page)
             return redirect(url_for('index'))
@@ -153,6 +145,7 @@ def edit_profile():
         else:
             flash('Invalid password.', 'danger')
     elif form.errors:
+        print("Error while submitting form:")
         print(form.errors)
         flash('Invalid submission:', 'danger')
         for field, errors in form.errors.items():
@@ -169,7 +162,6 @@ def change_pfp():
         # Get the file from the form
         image_file = request.files['image_file']
         filename = secure_filename(image_file.filename)
-        print(f"Image file: {filename}")
 
         # Upload the file to Google Cloud Storage
         upload_blob(image_file, filename)
@@ -177,7 +169,6 @@ def change_pfp():
 
         # Get the URL of the uploaded file
         image_url = f"https://storage.googleapis.com/board-market/{filename}"
-        print(f"Image URL: {image_url}")
 
         user = User.query.get(current_user.id)
         
