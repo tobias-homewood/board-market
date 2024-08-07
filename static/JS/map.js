@@ -1,3 +1,5 @@
+import updateResults from "./updateResults.js";
+
 // Get the CSRF token from the meta tag
 var csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
