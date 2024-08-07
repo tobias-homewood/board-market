@@ -1,7 +1,7 @@
 {% extends "index.html" %} {% block content %}
 <h2>{{ user.username }}</h2>
 {% if user.id == current_user.id %}
-<a class="btn btn-dark" href="{{ url_for('edit_profile') }}">Edit profile</a>
+<a class="btn btn-dark" href="{{ url_for('user_routes.edit_profile') }}">Edit profile</a>
 <p>Email: {{ user.email }}</p>
 {% endif %}
 <p>Bio: {{ user.bio }}</p>

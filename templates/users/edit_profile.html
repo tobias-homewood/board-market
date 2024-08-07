@@ -7,7 +7,7 @@
     {{ form.confirm_password.label }} {{ form.confirm_password() }}<br />
     {{ form.bio.label }} {{ form.bio(placeholder="Feel free to say a bit about
     yourself") }}<br />
-    <a class="btn btn-dark" href="{{ url_for('change_pfp') }}"
+    <a class="btn btn-dark" href="{{ url_for('user_routes.change_pfp') }}"
         >Change profile picture</a
     ><br />
     <input type="submit" value="Save changes" />
