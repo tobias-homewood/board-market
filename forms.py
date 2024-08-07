@@ -25,8 +25,8 @@ class UserAddForm(FlaskForm):
 
 class UserEditForm(UserAddForm):
     username = StringField('Username', validators=[Optional()])
-    new_password = PasswordField('New Password', validators=[Length(min=6)])
-    confirm_password = PasswordField('Confirm Password', validators=[Length(min=6)])
+    new_password = PasswordField('New Password', validators=[Length(min=6), Optional()])
+    confirm_password = PasswordField('Confirm Password', validators=[Length(min=6), Optional()])
 # Form for user login
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
