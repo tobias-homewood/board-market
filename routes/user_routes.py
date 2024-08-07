@@ -1,12 +1,15 @@
+# Importes from external libraries
 from flask import render_template, request, redirect, url_for, flash, session, Blueprint
-from models import db, User
-from forms import UserAddForm, LoginForm, UserEditForm
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from sqlalchemy.orm import joinedload
 from flask_login import login_user, logout_user 
 from urllib.parse import urlparse, urljoin
 from flask_login import current_user, login_required 
+
+# Imports from project files
+from models import db, User
+from forms import UserAddForm, LoginForm, UserEditForm
 from cloud_storage import *
 
 user_routes = Blueprint('user_routes', __name__, template_folder='templates')
