@@ -13,11 +13,6 @@ $(document).ready(function () {
                 var keyValue = item.split("=");
                 var key = decodeURIComponent(keyValue[0]);
                 var value = decodeURIComponent(keyValue[1].replace(/\+/g, " "));
-
-                // Exclude CSRF token from being set
-                if (key !== "csrf_token") {
-                    $("[name='" + key + "']").val(value);
-                }
             });
             // Repopulate other saved values and trigger updates as needed
         }

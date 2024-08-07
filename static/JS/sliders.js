@@ -1,4 +1,5 @@
 import { convertToFeetInches, convertToInchesWithFraction } from "./utils.js";
+import updateResults from "./updateResults.js";
 
 export default function initSliders() {
     // Initialize length slider

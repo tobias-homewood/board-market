@@ -10,6 +10,7 @@ export default function updateResults() {
         .getAttribute("content");
 
     var formData = $("form").serialize();
+    formData = formData.split("&").filter(item => !item.startsWith("csrf_token")).join("&");
     console.log("Serialized Form Data:", formData);
     localStorage.setItem("formData", formData);
     console.log("Saved Form Data:", localStorage.getItem("formData"));
