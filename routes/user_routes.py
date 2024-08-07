@@ -9,7 +9,7 @@ from urllib.parse import urlparse, urljoin
 from flask_login import current_user, login_required 
 from cloud_storage import *
 
-user_routes = Blueprint('user_routes', __name__, template_folder='templates/users')
+user_routes = Blueprint('user_routes', __name__, template_folder='templates')
 
 def is_safe_url(target):
         """Check if the URL is safe to redirect to."""
