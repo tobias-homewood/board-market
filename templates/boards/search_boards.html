@@ -8,7 +8,6 @@
     <div id="filter-form"> <!-- Filter form, initially hidden -->
          
         <form method="GET" action="{{ url_for('board_routes.search_boards') }}"> <!-- Form action is the search_boards route -->
-            {{ form.hidden_tag() }} <!-- CSRF token for form -->
             <div class=form-drop-down-container>
                 <div id="filter-button-container">
                     <button id="reset-button" class="btn btn-secondary" type="button">Reset filters</button> <!-- Reset filters button -->

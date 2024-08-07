@@ -119,10 +119,6 @@ def search_boards():
     else:
         favourites = []
 
-    if request.args and not form.validate():
-        flash('Invalid form data...', 'error')
-        print(form.errors)
-
     # For AJAX requests, return JSON
     if is_ajax:
         boards_data = [
