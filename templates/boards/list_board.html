@@ -9,7 +9,10 @@
             {{ form.hidden_tag() }}
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.board_location_text.label }}</label>
-                <div class="list-board-input">{{ form.board_location_text(id='board-location-text', class_='input-field', readonly=True) }}</div>
+                <div class="list-board-input" href="#mapContainer" data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="mapContainer">{{ form.board_location_text(id='board-location-text', class_='input-field', readonly=True) }}</div>
             </div>
             <div class="list-board-container">
                 <label class="list-board-label">{{ form.board_manufacturer.label }}</label>

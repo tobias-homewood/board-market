@@ -159,6 +159,7 @@ body{
 
 #board-location-text {
     background: rgb(189, 189, 189);
+    cursor: pointer;
 }
 /* Styling for the main container */
 #main-search-container {
