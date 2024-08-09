@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from geoalchemy2 import WKTElement
 
 from models import db, Board, Favourites
-from forms import BoardForm, SearchForm
+from forms import BoardForm, SearchForm, EditBoardForm
 from utils import convert_decimal_to_fraction, convert_inches_to_feet, fraction_to_decimal, convert_decimal_to_sixteenth
 from cloud_storage import upload_blob
 from search_filters import apply_filters
@@ -35,7 +35,7 @@ def list_board():
         main_photo_url = f"https://storage.googleapis.com/board-market/{main_photo_filename}"
         
         # Get the extra photos from the form
-        extra_photo_files = request.files.getlist('extra_photos')
+        extra_photo_files = [photo for photo in request.files.getlist('extra_photos') if photo.filename]
         extra_photo_urls = []
         for extra_photo_file in extra_photo_files:
             extra_photo_filename = secure_filename(extra_photo_file.filename)
@@ -179,11 +179,7 @@ def board_profile(board_id):
     if board is None:
         flash('Board not found.', 'error')
         return redirect(url_for('index'))
-    
-    # filter the extra photos that don't specify a file
-    board.extra_photos = [photo for photo in board.extra_photos if not photo.endswith('/')]
             
-
     return render_template('boards/board_profile.html', board=board, convert_decimal_to_fraction=convert_decimal_to_fraction, form=form)
 
 @board_routes.route('/delete_board/<int:board_id>', methods=['POST'])
@@ -227,7 +223,7 @@ def toggle_favourite(board_id):
 def edit_board(board_id):
     board = Board.query.get_or_404(board_id)
 
-    form = BoardForm()
+    form = EditBoardForm()
     form.board_location_text.data = session.get('location_text', 'Default Location')
     form.board_location_coordinates.data = session.get('coordinates', 'Default Coordinates')
 
@@ -239,24 +235,30 @@ def edit_board(board_id):
         width_total = float(form.width_integer.data) + (width_fraction_decimal if width_fraction_decimal else 0)
         depth_total = float(form.depth_integer.data) + (depth_fraction_decimal if depth_fraction_decimal else 0)
         
-        # Get the main photo from the form
+        # Get the main photo from the form if it exists
         main_photo_file = request.files['main_photo']
-        main_photo_filename = secure_filename(main_photo_file.filename)
-        # Upload the main photo to Google Cloud Storage
-        upload_blob(main_photo_file, main_photo_filename)
-        # Get the URL of the uploaded main photo
-        main_photo_url = f"https://storage.googleapis.com/board-market/{main_photo_filename}"
+        if main_photo_file:
+            main_photo_filename = secure_filename(main_photo_file.filename)
+            # Upload the main photo to Google Cloud Storage
+            upload_blob(main_photo_file, main_photo_filename)
+            # Get the URL of the uploaded main photo
+            main_photo_url = f"https://storage.googleapis.com/board-market/{main_photo_filename}"
+        else:
+            main_photo_url = board.main_photo
         
-        # Get the extra photos from the form
-        extra_photo_files = request.files.getlist('extra_photos')
-        extra_photo_urls = []
-        for extra_photo_file in extra_photo_files:
-            extra_photo_filename = secure_filename(extra_photo_file.filename)
-            # Upload the extra photo to Google Cloud Storage
-            upload_blob(extra_photo_file, extra_photo_filename)
-            # Get the URL of the uploaded extra photo
-            extra_photo_url = f"https://storage.googleapis.com/board-market/{extra_photo_filename}"
-            extra_photo_urls.append(extra_photo_url)
+        # Get the extra photos from the form if they exist
+        extra_photo_files = [photo for photo in request.files.getlist('extra_photos') if photo.filename]
+        if not extra_photo_files:
+            extra_photo_urls = board.extra_photos
+        else:
+            extra_photo_urls = []
+            for extra_photo_file in extra_photo_files:
+                extra_photo_filename = secure_filename(extra_photo_file.filename)
+                # Upload the extra photo to Google Cloud Storage
+                upload_blob(extra_photo_file, extra_photo_filename)
+                # Get the URL of the uploaded extra photo
+                extra_photo_url = f"https://storage.googleapis.com/board-market/{extra_photo_filename}"
+                extra_photo_urls.append(extra_photo_url)
         
         # Remove square brackets and split the string into lat and lon
         lon, lat = map(float, form.board_location_coordinates.data)
@@ -292,7 +294,7 @@ def edit_board(board_id):
         flash('Board updated successfully!', 'success')
         return redirect(url_for('index'))
     else:
-        form = BoardForm(obj=board)
+        form = EditBoardForm(obj=board)
 
         # fix units in width, depth inches, convert to fractions
         form.width_fraction.data = convert_decimal_to_sixteenth(board.width_fraction)
