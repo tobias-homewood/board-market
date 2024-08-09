@@ -70,10 +70,10 @@ class User(UserMixin, db.Model):
         return user  # Return the user
     
     @classmethod
-    def update(cls, user, email, password, image_url, bio):
-        user.email = email
-        user.image_url = image_url
-        user.bio = bio
+    def update(cls, user, email=None, password=None, image_url=None, bio=None):
+        user.email = email if email else user.email
+        user.image_url = image_url if image_url else user.image_url
+        user.bio = bio if bio else user.bio
         if password:
             user.user_password = generate_password_hash(password)
         db.session.commit()

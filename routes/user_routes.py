@@ -125,33 +125,49 @@ def edit_profile():
         form.email.data = current_user.email
         form.image_file.data = current_user.image_url
         form.bio.data = current_user.bio
-
-
-    if form.validate_on_submit():
-        # Authenticate user
-        user = User.authenticate(current_user.username, form.password.data)
-
-        if user:
-            # update user
-            User.update(
-                user=user,
-                email=form.email.data,
-                password=form.new_password.data,
-                image_url=form.image_file.data,
-                bio=form.bio.data
-            )
-            flash('Profile updated successfully!', 'success')
-            return redirect(url_for('user_routes.user_profile', username=current_user.username))
-        else:
-            flash('Invalid password.', 'danger')
-    elif form.errors:
-        print("Error while submitting form:")
-        print(form.errors)
+        return render_template('users/edit_profile.html', form=form)
+    
+    if not form.validate_on_submit():
         flash('Invalid submission:', 'danger')
         for field, errors in form.errors.items():
             for error in errors:
                 flash(f"- {field}: {error}", 'danger')
-    return render_template('users/edit_profile.html', form=form)
+        return render_template('users/edit_profile.html', form=form)
+
+    # Check if the user is updating their bio only, the email and password changes are password protected
+    if not form.new_password.data and not form.confirm_password.data and form.email.data == current_user.email:
+        current_user.bio = form.bio.data
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('user_routes.user_profile', username=current_user.username))
+    
+    # Check if the user is updating their email address without providing the current password
+    if current_user.email != form.email.data and not form.password.data:
+        flash('You need to provide the current password to change the email address.', 'danger')
+        return render_template('users/edit_profile.html', form=form)
+
+    # in any other case, check if the user provided the correct password
+    user = User.authenticate(current_user.username, form.password.data)
+
+    # Didn't specify the right password
+    if not user:
+        flash('Invalid password.', 'danger')
+        return render_template('users/edit_profile.html', form=form)
+    
+    
+    if form.new_password.data != form.confirm_password.data:
+        flash('Passwords do not match.', 'danger')
+        return render_template('users/edit_profile.html', form=form)
+    
+    # update user
+    User.update(
+        user=user,
+        email=form.email.data,
+        password=form.new_password.data,
+        bio=form.bio.data
+    )
+    flash('Profile updated successfully!', 'success')
+    return redirect(url_for('user_routes.user_profile', username=current_user.username))
 
 
 @user_routes.route('/change_pfp', methods=['POST', 'GET'])

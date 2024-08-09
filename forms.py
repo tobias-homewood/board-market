@@ -25,8 +25,12 @@ class UserAddForm(FlaskForm):
 
 class UserEditForm(UserAddForm):
     username = StringField('Username', validators=[Optional()])
+    password = PasswordField('Current Password', validators=[Length(min=6), Optional()])
     new_password = PasswordField('New Password', validators=[Length(min=6), Optional()])
     confirm_password = PasswordField('Confirm Password', validators=[Length(min=6), Optional()])
+
+class UserProfilePhotoForm(FlaskForm):
+    image_file = FileField('Profile Image', validators=[FileAllowed(['jpg', 'png','jpeg']), InputRequired()])
 # Form for user login
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
@@ -75,6 +79,7 @@ class BoardForm(FlaskForm):
 
 class EditBoardForm(BoardForm):
     main_photo = FileField('Main Photo', validators=[FileAllowed(['jpg', 'png','jpeg']), Optional()])
+
 # Form for searching boards
 class SearchForm(FlaskForm):
     asking_price = DecimalField('Asking Price', places=2, rounding=None, validators=[Optional()])
