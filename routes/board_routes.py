@@ -224,10 +224,10 @@ def edit_board(board_id):
     board = Board.query.get_or_404(board_id)
 
     form = EditBoardForm()
-    form.board_location_text.data = session.get('location_text', 'Default Location')
-    form.board_location_coordinates.data = session.get('coordinates', 'Default Coordinates')
-
+    
     if form.validate_on_submit():
+        form.board_location_text.data = session.get('location_text', 'Default Location')
+        form.board_location_coordinates.data = session.get('coordinates', 'Default Coordinates')
         width_fraction_decimal = fraction_to_decimal(form.width_fraction.data)
         depth_fraction_decimal = fraction_to_decimal(form.depth_fraction.data)
         board_length_total = int(form.board_length_feet.data) * 12 + int(form.board_length_inches.data)
