@@ -9,7 +9,7 @@ from flask_login import current_user, login_required
 
 # Imports from project files
 from models import db, User
-from forms import UserAddForm, LoginForm, UserEditForm
+from forms import UserAddForm, LoginForm, UserEditForm, UserProfilePhotoForm
 from cloud_storage import *
 
 user_routes = Blueprint('user_routes', __name__, template_folder='templates')
@@ -157,7 +157,7 @@ def edit_profile():
 @user_routes.route('/change_pfp', methods=['POST', 'GET'])
 @login_required
 def change_pfp():
-    form = UserEditForm(obj=current_user)
+    form = UserProfilePhotoForm()
     if form.validate_on_submit():
         # Get the file from the form
         image_file = request.files['image_file']
@@ -173,14 +173,15 @@ def change_pfp():
         user = User.query.get(current_user.id)
         
         # update user
-        User.update(
-            user=user,
-            email=form.email.data,
-            password=form.new_password.data,
-            image_url=image_url,
-            bio=form.bio.data
-        )
+        user.image_url = image_url
+        db.session.commit()
         flash('Profile updated successfully!', 'success')
         return redirect(url_for('user_routes.user_profile', username=current_user.username)) 
+    
+    elif form.errors:
+        flash('Invalid submission:', 'danger')
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"- {field}: {error}", 'danger')
     
     return render_template('users/change_pfp.html', form=form)
