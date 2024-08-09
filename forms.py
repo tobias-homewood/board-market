@@ -73,6 +73,8 @@ class BoardForm(FlaskForm):
     main_photo = FileField('Main Photo', validators=[FileAllowed(['jpg', 'png','jpeg']), InputRequired()])
     extra_photos = MultipleFileField('Extra Photos', validators=[FileAllowed(['jpg', 'png','jpeg']), Optional(), validate_photo_count])
 
+class EditBoardForm(BoardForm):
+    main_photo = FileField('Main Photo', validators=[FileAllowed(['jpg', 'png','jpeg']), Optional()])
 # Form for searching boards
 class SearchForm(FlaskForm):
     asking_price = DecimalField('Asking Price', places=2, rounding=None, validators=[Optional()])

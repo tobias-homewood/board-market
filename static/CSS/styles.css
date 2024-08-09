@@ -107,13 +107,13 @@ body{
 }
 
 /* Styling for the title on the list board page */
-#list-board-title{
+#list-board-title, #edit-board-title{
     font-size: 25px;
     font-weight: bold;
     text-align: center;
 }
 /* Styling for the form-group on the list board page */
-#list-board-form-container{
+#list-board-form-container, #edit-board-form-container{
     display: flex;
     justify-content: center;
     align-items: center;
