@@ -1,15 +1,19 @@
 {% extends "index.html" %} {% block content %}
-<h2>Edit profile</h2>
+<h2 class="text-center">Edit profile</h2>
+<div class="container">
 <form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }} {{ form.email.label }} {{ form.email() }}<br />
-    {{ "Current password" }} {{ form.password() }}<br />
-    {{ form.new_password.label }} {{ form.new_password() }}<br />
-    {{ form.confirm_password.label }} {{ form.confirm_password() }}<br />
+    {{ form.hidden_tag() }} {{ form.email.label }} {{ form.email(class_="input-field") }}
     {{ form.bio.label }} {{ form.bio(placeholder="Feel free to say a bit about
-    yourself") }}<br />
-    <a class="btn btn-dark" href="{{ url_for('user_routes.change_pfp') }}"
-        >Change profile picture</a
-    ><br />
-    <input type="submit" value="Save changes" />
+    yourself", class_="input-field") }}
+    {{ "Current password" }} {{ form.password(class_="input-field") }}
+    {{ form.new_password.label }} {{ form.new_password(class_="input-field") }}
+    {{ form.confirm_password.label }} {{ form.confirm_password(class_="input-field") }}
+    <div>
+    <a class="btn btn-dark mt-2" href="{{ url_for('user_routes.change_pfp') }}">
+        Change profile picture
+    </a>
+    </div>
+    <input class="btn btn-primary mt-2" type="submit" value="Save changes" />
 </form>
+</div>
 {% endblock %}
