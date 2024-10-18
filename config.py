@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
 
-load_dotenv(dotenv_path='secrets/keys.env')
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'secrets/my_service_account_key.json'
+load_dotenv(dotenv_path='keys.env')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'my_service_account_key.json'
 MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY')
 MAIL_USERNAME = os.getenv('MAIL_USERNAME')
 
